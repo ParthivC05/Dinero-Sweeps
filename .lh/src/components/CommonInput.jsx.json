@@ -1,0 +1,18 @@
+{
+    "sourceFile": "src/components/CommonInput.jsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1752580640436,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1752580640436,
+            "name": "Commit-0",
+            "content": "import React, { forwardRef } from \"react\";\r\n\r\nconst CommonInput = forwardRef(({\r\n  label,\r\n  type = \"text\",\r\n  value,\r\n  onChange,\r\n  onBlur,\r\n  name,\r\n  id,\r\n  placeholder,\r\n  required = false,\r\n  autoComplete,\r\n  error,\r\n  touched,\r\n  valid,\r\n  className = \"\",\r\n  ...rest\r\n}, ref) => {\r\n  return (\r\n    <div className=\"mb-3\">\r\n      {label && (\r\n        <label htmlFor={id || name} className=\"form-label\">\r\n          {label}\r\n        </label>\r\n      )}\r\n      <input\r\n        ref={ref}\r\n        type={type}\r\n        className={`form-control${touched && error ? \" is-invalid\" : \"\"}${touched && valid ? \" is-valid\" : \"\"} ${className}`}\r\n        id={id || name}\r\n        name={name}\r\n        value={value}\r\n        onChange={onChange}\r\n        onBlur={onBlur}\r\n        placeholder={placeholder}\r\n        required={required}\r\n        autoComplete={autoComplete}\r\n        aria-invalid={!!(touched && error)}\r\n        aria-describedby={error ? `${id || name}Error` : undefined}\r\n        {...rest}\r\n      />\r\n      {touched && error && (\r\n        <div id={`${id || name}Error`} className=\"invalid-feedback\" role=\"alert\">\r\n          {error}\r\n        </div>\r\n      )}\r\n      {touched && valid && !error && (\r\n        <div className=\"valid-feedback d-block\">Looks good!</div>\r\n      )}\r\n    </div>\r\n  );\r\n});\r\n\r\nexport default CommonInput; "
+        }
+    ]
+}

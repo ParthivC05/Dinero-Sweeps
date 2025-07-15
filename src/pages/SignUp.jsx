@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import banner from "../assets/banner.png";
 import Navbar from "../components/Navbar";
+import CommonInput from "../components/CommonInput";
 
 const initialState = {
+  username: "",
   firstName: "",
   lastName: "",
   email: "",
@@ -32,14 +34,52 @@ const months = [
 const currentYear = new Date().getFullYear();
 const years = Array.from({ length: 100 }, (_, i) => currentYear - i);
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 const SignUp = () => {
   const [form, setForm] = useState(initialState);
   const [touched, setTouched] = useState({});
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
+  const [checkingUsername, setCheckingUsername] = useState(false);
+  const [usernameAvailable, setUsernameAvailable] = useState(null);
 
+  const calculateAge = (year, month, day) => {
+    if (!year || !month || !day) return 0;
+    const monthIndex = months.indexOf(month);
+    const dob = new Date(year, monthIndex, day);
+    const today = new Date();
+    let age = today.getFullYear() - dob.getFullYear();
+    const m = today.getMonth() - dob.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+      age--;
+    }
+    return age;
+  };
+
+  // // Username uniqueness check
+  // const checkUsernameUnique = async (username) => {
+  //   if (!username) return;
+  //   setCheckingUsername(true);
+  //   setUsernameAvailable(null);
+  //   try {
+  //     const res = await fetch(`${API_BASE_URL}/user/check-username?username=${encodeURIComponent(username)}`);
+  //     const data = await res.json();
+  //     setUsernameAvailable(data.available);
+  //     setErrors((prev) => ({ ...prev, username: data.available ? undefined : "Username is already taken." }));
+  //   } catch (e) {
+  //     setUsernameAvailable(null);
+  //     setErrors((prev) => ({ ...prev, username: "Could not check username. Try again." }));
+  //   } finally {
+  //     setCheckingUsername(false);
+  //   }
+  // };
+
+  // Validation logic
   const validate = (values) => {
     const errs = {};
+    if (!values.username) errs.username = "Username is required.";
+    else if (usernameAvailable === false) errs.username = "Username is already taken.";
     if (!values.firstName.trim()) errs.firstName = "First name is required.";
     if (!values.lastName.trim()) errs.lastName = "Last name is required.";
     if (!values.email) errs.email = "Email is required.";
@@ -51,6 +91,8 @@ const SignUp = () => {
     else if (!/^\d{1,2}$/.test(values.dobDay) || +values.dobDay < 1 || +values.dobDay > 31) errs.dobDay = "Invalid day.";
     if (!values.dobYear) errs.dobYear = "Year required.";
     else if (!/^\d{4}$/.test(values.dobYear) || +values.dobYear < currentYear - 100 || +values.dobYear > currentYear) errs.dobYear = "Invalid year.";
+    const age = calculateAge(values.dobYear, values.dobMonth, values.dobDay);
+    if (values.dobYear && values.dobMonth && values.dobDay && age < 18) errs.dobYear = "You must be at least 18 years old.";
     if (!values.ageCheck) errs.ageCheck = "You must confirm you are 18+.";
     return errs;
   };
@@ -58,15 +100,22 @@ const SignUp = () => {
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setForm((prev) => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
+    if (name === "username") {
+      setUsernameAvailable(null);
+    }
   };
 
   const handleBlur = (e) => {
     setTouched((prev) => ({ ...prev, [e.target.name]: true }));
+    if (e.target.name === "username" && form.username) {
+      // checkUsernameUnique(form.username); 
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setTouched({
+      username: true,
       firstName: true,
       lastName: true,
       email: true,
@@ -89,89 +138,100 @@ const SignUp = () => {
 
   React.useEffect(() => {
     setErrors(validate(form));
-  }, [form]);
+  }, [form, usernameAvailable]);
 
-  const isFormValid = Object.keys(errors).length === 0 && form.firstName && form.lastName && form.email && form.password && form.dobMonth && form.dobDay && form.dobYear && form.ageCheck;
+  const isFormValid = Object.keys(errors).length === 0 && form.username && form.firstName && form.lastName && form.email && form.password && form.dobMonth && form.dobDay && form.dobYear && form.ageCheck && usernameAvailable !== false && calculateAge(form.dobYear, form.dobMonth, form.dobDay) >= 18;
 
   return (
     <div className="min-vh-100 d-flex flex-column bg-black overflow-x-hidden" style={{ minHeight: '100vh' }}>
-     
       <div className="d-flex flex-grow-1 align-items-center justify-content-center w-100" style={{ minHeight: 0, width: '100%' }}>
         <div className="card bg-black text-white shadow p-4 w-100 mt-3" style={{ maxWidth: 500 }}>
           <img src={banner} alt="Promo Banner" className="img-fluid rounded mb-3" />
           <form onSubmit={handleSubmit} noValidate>
-            <div className="mb-3">
-              <label htmlFor="email" className="form-label">Email Address</label>
-              <input
-                type="email"
-                className={`form-control${touched.email && errors.email ? " is-invalid" : ""}`}
-                id="email"
-                name="email"
-                placeholder="Email Address"
-                value={form.email}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                aria-invalid={!!(touched.email && errors.email)}
-                aria-describedby="emailHelp"
-                required
-                autoComplete="email"
-              />
-              {touched.email && errors.email && <div className="invalid-feedback">{errors.email}</div>}
-            </div>
+            <CommonInput
+              label="Username"
+              type="text"
+              id="username"
+              name="username"
+              placeholder="Username"
+              value={form.username}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              required
+              autoComplete="username"
+              touched={touched.username}
+              error={errors.username}
+              valid={touched.username && !errors.username && form.username && usernameAvailable}
+            />
+            {checkingUsername && <div className="text-info small">Checking username...</div>}
+            {touched.username && usernameAvailable && !errors.username && <div className="valid-feedback d-block">Username is available!</div>}
 
-            <div className="mb-1">
-              <label htmlFor="password" className="form-label">Password</label>
-              <input
-                type="password"
-                className={`form-control${touched.password && errors.password ? " is-invalid" : ""}`}
-                id="password"
-                name="password"
-                placeholder="Password"
-                value={form.password}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                aria-invalid={!!(touched.password && errors.password)}
-                aria-describedby="passwordHelp"
-                required
-                autoComplete="new-password"
-              />
-              {touched.password && errors.password && <div className="invalid-feedback d-block">{errors.password}</div>}
-            </div>
+            <CommonInput
+              label="Email Address"
+              type="email"
+              id="email"
+              name="email"
+              placeholder="Email Address"
+              value={form.email}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              required
+              autoComplete="email"
+              touched={touched.email}
+              error={errors.email}
+              valid={touched.email && !errors.email && form.email}
+            />
+
+            <CommonInput
+              label="Password"
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Password"
+              value={form.password}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              required
+              autoComplete="new-password"
+              touched={touched.password}
+              error={errors.password}
+              valid={touched.password && !errors.password && form.password}
+            />
 
             <div className="row mb-3">
               <div className="col-12 col-md-6 mb-2 mb-md-0">
-                <label htmlFor="firstName" className="form-label">First Name</label>
-                <input
+                <CommonInput
+                  label="First Name"
                   type="text"
-                  className={`form-control${touched.firstName && errors.firstName ? " is-invalid" : ""}`}
                   id="firstName"
                   name="firstName"
                   placeholder="First name"
                   value={form.firstName}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  aria-invalid={!!(touched.firstName && errors.firstName)}
                   required
                   autoComplete="given-name"
+                  touched={touched.firstName}
+                  error={errors.firstName}
+                  valid={touched.firstName && !errors.firstName && form.firstName}
                 />
-                {touched.firstName && errors.firstName && <div className="invalid-feedback">{errors.firstName}</div>}
               </div>
               <div className="col-12 col-md-6">
-                <label htmlFor="lastName" className="form-label">Last Name</label>
-                <input
+                <CommonInput
+                  label="Last Name"
                   type="text"
-                  className={`form-control${touched.lastName && errors.lastName ? " is-invalid" : ""}`}
                   id="lastName"
                   name="lastName"
                   placeholder="Last name"
                   value={form.lastName}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  aria-invalid={!!(touched.lastName && errors.lastName)}
                   required
                   autoComplete="family-name"
+                  touched={touched.lastName}
+                  error={errors.lastName}
+                  valid={touched.lastName && !errors.lastName && form.lastName}
                 />
-                {touched.lastName && errors.lastName && <div className="invalid-feedback">{errors.lastName}</div>}
               </div>
             </div>
 
@@ -235,19 +295,20 @@ const SignUp = () => {
               </div>
             </div>
 
-            <div className="mb-3">
-              <label htmlFor="referredBy" className="form-label">Referred by (optional)</label>
-              <input
-                type="text"
-                className="form-control"
-                id="referredBy"
-                name="referredBy"
-                placeholder="Referred by (optional)"
-                value={form.referredBy}
-                onChange={handleChange}
-                autoComplete="off"
-              />
-            </div>
+            <CommonInput
+              label="Referred by (optional)"
+              type="text"
+              id="referredBy"
+              name="referredBy"
+              placeholder="Referred by (optional)"
+              value={form.referredBy}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              autoComplete="off"
+              touched={touched.referredBy}
+              error={errors.referredBy}
+              valid={touched.referredBy && !errors.referredBy && form.referredBy}
+            />
 
             <div className="form-check mb-3">
               <input
