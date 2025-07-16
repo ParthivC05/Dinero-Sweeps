@@ -142,6 +142,14 @@ const SignUp = () => {
 
   const isFormValid = Object.keys(errors).length === 0 && form.username && form.firstName && form.lastName && form.email && form.password && form.dobMonth && form.dobDay && form.dobYear && form.ageCheck && usernameAvailable !== false && calculateAge(form.dobYear, form.dobMonth, form.dobDay) >= 18;
 
+  const handleGoogleSignup = () => {
+    window.location.href = 'http://54.234.145.12:8004/api/v1/auth/google';
+  };
+
+  const handleFacebookSignup = () => {
+    window.location.href = 'http://54.234.145.12:8004/api/v1/auth/facebook';
+  };
+
   return (
     <div className="min-vh-100 d-flex flex-column bg-black overflow-x-hidden" style={{ minHeight: '100vh' }}>
       <div className="d-flex flex-grow-1 align-items-center justify-content-center w-100" style={{ minHeight: 0, width: '100%' }}>
@@ -345,7 +353,7 @@ const SignUp = () => {
               <button
                 type="button"
                 className="btn btn-light d-flex align-items-center justify-content-center w-100"
-                onClick={() => alert("Google signup (demo)")}
+                onClick={handleGoogleSignup}
                 aria-label="Sign up with Google"
               >
                 <img src="https://img.icons8.com/color/24/000000/google-logo.png" className="me-2" alt="Google" />
@@ -354,7 +362,7 @@ const SignUp = () => {
               <button
                 type="button"
                 className="btn btn-light d-flex align-items-center justify-content-center w-100"
-                onClick={() => alert("Facebook signup (demo)")}
+                onClick={handleFacebookSignup}
                 aria-label="Sign up with Facebook"
               >
                 <img src="https://img.icons8.com/color/24/000000/facebook-new.png" className="me-2" alt="Facebook" />

@@ -15,7 +15,7 @@ const Login = () => {
   const [loginError, setLoginError] = useState("");
   const recaptchaRef = useRef(null);
 
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ;
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://54.234.145.12:8004/api/v1';
 
   const LOGIN_ENDPOINT = `${API_BASE_URL}/user/login`; 
 
@@ -73,7 +73,11 @@ const Login = () => {
   };
 
   const handleGoogleLogin = () => {
-    alert("Redirecting to Google OAuth (Demo)");
+    window.location.href = 'http://localhost:8004/api/v1/auth/google';
+  };
+
+  const handleFacebookLogin = () => {
+    window.location.href = 'http://localhost:8004/api/v1/auth/facebook';
   };
 
   const handleSubmit = async (e) => {
@@ -103,6 +107,7 @@ const Login = () => {
             "Content-Type": "application/json",
             "Accept": "application/json",
           },
+          credentials: 'include', // Include cookies for CORS
           body: JSON.stringify(requestPayload),
         });
 
@@ -112,7 +117,12 @@ const Login = () => {
         let responseData = {};
         const text = await response.text();
         if (text) {
-          responseData = JSON.parse(text);
+          try {
+            responseData = JSON.parse(text);
+          } catch (parseError) {
+            console.error("Failed to parse response:", parseError);
+            responseData = { message: "Invalid response format" };
+          }
         }
         console.log("Response data:", responseData);
 
@@ -131,12 +141,28 @@ const Login = () => {
           
         } else {
           
-          let errorMessage =
-            (responseData.errors && responseData.errors[0]) ||
-            responseData.message ||
-            responseData.error ||
-            responseData.detail ||
-            `Login failed (${response.status})`;
+          let errorMessage = "Login failed";
+          
+          if (responseData.errors && responseData.errors.length > 0) {
+            errorMessage = responseData.errors[0].message || responseData.errors[0];
+          } else if (responseData.message) {
+            errorMessage = responseData.message;
+          } else if (responseData.error) {
+            errorMessage = responseData.error;
+          } else if (responseData.detail) {
+            errorMessage = responseData.detail;
+          } else if (response.status === 401) {
+            errorMessage = "Invalid username or password";
+          } else if (response.status === 403) {
+            errorMessage = "Access denied. Please check your credentials.";
+          } else if (response.status === 400) {
+            errorMessage = "Invalid request. Please check your input.";
+          } else if (response.status === 0) {
+            errorMessage = "Network error. Please check your connection.";
+          } else {
+            errorMessage = `Login failed (${response.status})`;
+          }
+          
           setLoginError(errorMessage);
           toast.error(errorMessage);
           
@@ -148,8 +174,17 @@ const Login = () => {
       } catch (error) {
         console.error("Login error:", error);
         setSubmitting(false);
-        setLoginError("An unexpected error occurred. Please try again.");
-        toast.error("An unexpected error occurred. Please try again.");
+        
+        let errorMessage = "An unexpected error occurred. Please try again.";
+        
+        if (error.name === 'TypeError' && error.message.includes('fetch')) {
+          errorMessage = "Network error. Please check your connection and try again.";
+        } else if (error.message) {
+          errorMessage = error.message;
+        }
+        
+        setLoginError(errorMessage);
+        toast.error(errorMessage);
         
         if (recaptchaRef.current) {
           recaptchaRef.current.reset();
@@ -327,6 +362,20 @@ const Login = () => {
                     aria-hidden="true"
                   />
                   <span>Continue with Google</span>
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-primary d-flex align-items-center justify-content-center w-100"
+                  onClick={handleFacebookLogin}
+                  aria-label="Sign in with Facebook account"
+                >
+                  <img
+                    src="https://img.icons8.com/color/24/000000/facebook-new.png"
+                    className="me-2"
+                    alt="Facebook logo"
+                    aria-hidden="true"
+                  />
+                  <span>Continue with Facebook</span>
                 </button>
               </div>
 

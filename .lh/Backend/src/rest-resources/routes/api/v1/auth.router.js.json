@@ -1,0 +1,18 @@
+{
+    "sourceFile": "Backend/src/rest-resources/routes/api/v1/auth.router.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1752664793548,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1752664793547,
+            "name": "Commit-0",
+            "content": "const express = require('express');\r\nconst passport = require('passport');\r\nconst router = express.Router();\r\n\r\n// Google OAuth\r\nrouter.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));\r\n\r\nrouter.get('/google/callback', passport.authenticate('google', { failureRedirect: '/login?error=google' }),\r\n  (req, res) => {\r\n    // Generate your JWT/access token here\r\n    // Redirect to frontend with token\r\n    const token = req.user.token; // Assume user object has token\r\n    res.redirect(`http://localhost:5173/oauth-callback?token=${token}`);\r\n  }\r\n);\r\n\r\n// Facebook OAuth\r\nrouter.get('/facebook', passport.authenticate('facebook', { scope: ['email'] }));\r\n\r\nrouter.get('/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/login?error=facebook' }),\r\n  (req, res) => {\r\n    // Generate your JWT/access token here\r\n    // Redirect to frontend with token\r\n    const token = req.user.token; // Assume user object has token\r\n    res.redirect(`http://localhost:5173/oauth-callback?token=${token}`);\r\n  }\r\n);\r\n\r\nmodule.exports = router; "
+        }
+    ]
+}

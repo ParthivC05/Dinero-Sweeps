@@ -1,0 +1,22 @@
+{
+    "sourceFile": "src/pages/LandingPage.jsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1752668625174,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1752669180630,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -6,9 +6,9 @@\n const LandingPage = () => (\r\n   <div style={{ display: \"flex\", minHeight: \"100vh\" }}>\r\n     <Sidebar />\r\n     <div style={{ flex: 1, display: \"flex\", flexDirection: \"column\" }}>\r\n-      <Navbar />\r\n+      {/* <Navbar /> */}\r\n       <GameList />\r\n     </div>\r\n   </div>\r\n );\r\n"
+                }
+            ],
+            "date": 1752668625174,
+            "name": "Commit-0",
+            "content": "import React from \"react\";\r\nimport Sidebar from \"../components/Sidebar\";\r\nimport Navbar from \"../components/Navbar\";\r\nimport GameList from \"../components/GameList\";\r\n\r\nconst LandingPage = () => (\r\n  <div style={{ display: \"flex\", minHeight: \"100vh\" }}>\r\n    <Sidebar />\r\n    <div style={{ flex: 1, display: \"flex\", flexDirection: \"column\" }}>\r\n      <Navbar />\r\n      <GameList />\r\n    </div>\r\n  </div>\r\n);\r\n\r\nexport default LandingPage; "
+        }
+    ]
+}
