@@ -1,6 +1,28 @@
 import React, { useState } from "react";
 import logo from "../assets/logo.png";
-import "bootstrap-icons/font/bootstrap-icons.css";
+import {
+  FaCoins,
+  FaMoneyBillWave,
+  FaUser,
+  FaChevronDown,
+  FaChevronUp,
+  FaUserCircle,
+  FaCog,
+  FaHome,
+  FaStar,
+  FaList,
+  FaTint,
+  FaStore,
+  FaQuestionCircle,
+  FaThLarge,
+  FaCompactDisc,
+  FaTicketAlt,
+  FaGamepad,
+  FaInstagram,
+  FaTiktok,
+  FaFacebook,
+  FaTwitter,
+} from "react-icons/fa";
 
 const Sidebar = () => {
   const [openSection, setOpenSection] = useState("profile");
@@ -11,162 +33,144 @@ const Sidebar = () => {
 
   return (
     <aside
-      className="sidebar text-white d-flex flex-column"
+      className="flex flex-col text-white font-sans"
       style={{
         width: 260,
         minHeight: "100vh",
         background: "linear-gradient(180deg, #18111A 0%, #1B0F1A 100%)",
-        boxShadow: "2px 0 16px #0008",
       }}
     >
-      <div className="mb-4 text-center pt-4">
-        <img src={logo} alt="Orion Stars Logo" style={{ width: 180, marginBottom: 16 }} />
+      <div className="text-center pt-6">
+        <img src={logo} alt="Orion Stars Logo" className="w-44 mx-auto mb-6" />
       </div>
       <div
-        className="mb-3 mx-3 p-3"
-        style={{
-          border: "2px solid #FFD600",
-          borderRadius: 16,
-          boxShadow: "0 0 16px 2px #FFD60088",
-          background: "#18111A",
-        }}
+        className="mb-6 mx-4 p-4 border-2 border-yellow-400 rounded-2xl bg-[#18111A]"
+        style={{ boxShadow: "0 0 16px 2px #FFD60088" }}
       >
-        <div className="d-flex align-items-center justify-content-between mb-2">
-          <span>
-            <i className="bi bi-coin" style={{ color: "#FFD600", fontSize: 22, marginRight: 6 }} />
-            <span className="fw-bold" style={{ fontSize: 18 }}>GC 7,500</span>
+        <div className="flex items-center justify-between mb-3">
+          <span className="flex items-center gap-2">
+            <FaCoins className="text-yellow-400 text-xl" />
+            <span className="font-bold text-lg">GC 7,500</span>
           </span>
-          <span>
-            <i className="bi bi-cash-stack" style={{ color: "#7FFFAB", fontSize: 22, marginRight: 6 }} />
-            <span className="fw-bold" style={{ fontSize: 18 }}>$5.50</span>
+          <span className="flex items-center gap-2">
+            <FaMoneyBillWave className="text-green-300 text-xl" />
+            <span className="font-bold text-lg">5.50</span>
           </span>
         </div>
-        <div className="d-flex gap-2">
-          <button
-            className="btn fw-bold"
-            style={{
-              background: "linear-gradient(90deg, #FF4E9B 0%, #FFD600 100%)",
-              color: "#fff",
-              borderRadius: 12,
-              flex: 1,
-            }}
-          >
+        <div className="flex gap-2">
+          <button className="flex-1 font-bold rounded-xl bg-[#C0013A] py-2">
             Get Coins
           </button>
-          <button
-            className="btn fw-bold"
-            style={{
-              border: "1.5px solid #FFD600",
-              color: "#fff",
-              borderRadius: 12,
-              flex: 1,
-              background: "transparent",
-            }}
-          >
+          <button className="flex-1 font-bold rounded-xl bg-[#C0013A] py-2">
             Redeem
           </button>
         </div>
       </div>
-
-      <div className="mx-3 mb-2">
+      <div className="mx-4 mb-4">
         <button
-          className="w-100 d-flex align-items-center justify-content-between px-3 py-2"
-          style={{
-            background: "linear-gradient(90deg, #FF4E9B 0%, #FFD600 100%)",
-            color: "#fff",
-            border: "none",
-            borderRadius: 12,
-            fontWeight: 600,
-            fontSize: 18,
-            transition: "background 0.2s",
-          }}
+          className="w-full flex items-center justify-between px-4 py-3 rounded-xl border-2 border-yellow-400 text-white font-bold text-lg bg-gradient-to-r from-black via-[#1c0f18] to-black"
           onClick={() => toggleSection("profile")}
         >
-          <span>
-            <i className="bi bi-person-fill me-2" />
+          <span className="flex items-center gap-2">
+            <FaUser />
             Profile
           </span>
-          <i
-            className={`bi bi-chevron-${openSection === "profile" ? "up" : "down"}`}
-            style={{ transition: "transform 0.2s", transform: openSection === "profile" ? "rotate(0deg)" : "rotate(180deg)" }}
-          />
+          {openSection === "profile" ? <FaChevronUp /> : <FaChevronDown />}
         </button>
         {openSection === "profile" && (
-          <ul className="list-unstyled mt-2 mb-0">
-            <li><span className="sidebar-link"><i className="bi bi-person-circle me-2" />My Account</span></li>
-            <li><span className="sidebar-link"><i className="bi bi-gear me-2" />Settings</span></li>
+          <ul className="mt-3 space-y-3 pl-2 text-base">
+            <li className="flex items-center gap-2 cursor-pointer hover:text-yellow-400">
+              <FaUserCircle />
+              My Account
+            </li>
+            <li className="flex items-center gap-2 cursor-pointer hover:text-yellow-400">
+              <FaCog />
+              Settings
+            </li>
           </ul>
         )}
       </div>
-
-      <hr className="border-secondary mx-3" />
-
-      <div className="mx-3">
-        <div className="fw-bold mb-2" style={{ color: "#FF4E9B" }}>
-          <i className="bi bi-house-door-fill me-2" />
+      <hr className="border-gray-700 mx-4 mb-4" />
+      <div className="mx-4">
+        <div className="mb-3 text-pink-400 font-semibold flex items-center gap-2">
+          <FaHome />
           Promotions
         </div>
-        <ul className="list-unstyled mb-3">
-          <li><span className="sidebar-link"><i className="bi bi-star me-2" />Favourites</span></li>
-          <li><span className="sidebar-link"><i className="bi bi-list-task me-2" />Task List</span></li>
-          <li><span className="sidebar-link"><i className="bi bi-droplet-half me-2" />Faucet</span></li>
-          <li><span className="sidebar-link"><i className="bi bi-shop me-2" />Stores</span></li>
-          <li><span className="sidebar-link"><i className="bi bi-question-circle me-2" />FAQ</span></li>
+        <ul className="space-y-3 pl-2 text-base mb-4">
+          <li className="flex items-center gap-2 cursor-pointer hover:text-yellow-400">
+            <FaStar />
+            Favourites
+          </li>
+          <li className="flex items-center gap-2 cursor-pointer hover:text-yellow-400">
+            <FaList />
+            Task List
+          </li>
+          <li className="flex items-center gap-2 cursor-pointer hover:text-yellow-400">
+            <FaTint />
+            Faucet
+          </li>
+          <li className="flex items-center gap-2 cursor-pointer hover:text-yellow-400">
+            <FaStore />
+            Stores
+          </li>
+          <li className="flex items-center gap-2 cursor-pointer hover:text-yellow-400">
+            <FaQuestionCircle />
+            FAQ
+          </li>
         </ul>
       </div>
-
-      <hr className="border-secondary mx-3" />
-
-      <div className="mx-3">
+      <hr className="border-gray-700 mx-4 mb-4" />
+      <div className="mx-4">
         <button
-          className="w-100 d-flex align-items-center justify-content-between px-3 py-2 mb-2"
-          style={{
-            background: "linear-gradient(90deg, #FF4E9B 0%, #FFD600 100%)",
-            color: "#fff",
-            border: "none",
-            borderRadius: 12,
-            fontWeight: 600,
-            fontSize: 18,
-            transition: "background 0.2s",
-          }}
+          className="w-full flex items-center justify-between px-4 py-3 rounded-xl border-2 border-yellow-400 text-white font-bold text-lg bg-gradient-to-r from-black via-[#1c0f18] to-black mb-2"
           onClick={() => toggleSection("provider")}
         >
-          <span>
-            <i className="bi bi-person-fill me-2" />
+          <span className="flex items-center gap-2">
+            <FaUser />
             Provider
           </span>
-          <i
-            className={`bi bi-chevron-${openSection === "provider" ? "up" : "down"}`}
-            style={{ transition: "transform 0.2s", transform: openSection === "provider" ? "rotate(0deg)" : "rotate(180deg)" }}
-          />
+          {openSection === "provider" ? <FaChevronUp /> : <FaChevronDown />}
         </button>
         {openSection === "provider" && (
-          <ul className="list-unstyled">
-            <li><span className="sidebar-link"><i className="bi bi-slot me-2" />Casino</span></li>
-            <li><span className="sidebar-link"><i className="bi bi-grid-3x3-gap me-2" />Category <i className="bi bi-chevron-down ms-1" /></span></li>
-            <li><span className="sidebar-link"><i className="bi bi-record-circle me-2" />Speen wheel</span></li>
-            <li><span className="sidebar-link"><i className="bi bi-ticket-perforated me-2" />Tickets</span></li>
-            <li><span className="sidebar-link"><i className="bi bi-controller me-2" />Responsible Gaming</span></li>
+          <ul className="space-y-3 pl-2 text-base">
+            <li className="flex items-center gap-2 cursor-pointer hover:text-yellow-400">
+              <FaThLarge />
+              Casino
+            </li>
+            <li className="flex items-center gap-2 cursor-pointer hover:text-yellow-400">
+              <FaThLarge />
+              Category
+              <FaChevronDown className="ml-auto text-sm" />
+            </li>
+            <li className="flex items-center gap-2 cursor-pointer hover:text-yellow-400">
+              <FaCompactDisc />
+              Speen wheel
+            </li>
+            <li className="flex items-center gap-2 cursor-pointer hover:text-yellow-400">
+              <FaTicketAlt />
+              Tickets
+            </li>
+            <li className="flex items-center gap-2 cursor-pointer hover:text-yellow-400">
+              <FaGamepad />
+              Responsible Gaming
+            </li>
           </ul>
         )}
       </div>
-
-      <div className="mt-auto pt-3 pb-4 d-flex justify-content-center gap-2">
-        <a href="#" className="bg-white rounded p-2 d-flex align-items-center justify-content-center" style={{ width: 38, height: 38 }}>
-          <i className="bi bi-instagram" style={{ color: "#18111A", fontSize: 22 }} />
-        </a>
-        <a href="#" className="bg-white rounded p-2 d-flex align-items-center justify-content-center" style={{ width: 38, height: 38 }}>
-          <i className="bi bi-tiktok" style={{ color: "#18111A", fontSize: 22 }} />
-        </a>
-        <a href="#" className="bg-white rounded p-2 d-flex align-items-center justify-content-center" style={{ width: 38, height: 38 }}>
-          <i className="bi bi-facebook" style={{ color: "#18111A", fontSize: 22 }} />
-        </a>
-        <a href="#" className="bg-white rounded p-2 d-flex align-items-center justify-content-center" style={{ width: 38, height: 38 }}>
-          <i className="bi bi-x" style={{ color: "#18111A", fontSize: 22 }} />
-        </a>
+      <div className="mt-auto pt-6 pb-6 flex justify-center gap-4">
+        {[FaInstagram, FaTiktok, FaFacebook, FaTwitter].map((Icon, idx) => (
+          <a
+            key={idx}
+            href="#"
+            className="bg-white rounded-xl p-2 flex items-center justify-center"
+            style={{ width: 44, height: 44 }}
+          >
+            <Icon className="text-black text-xl" />
+          </a>
+        ))}
       </div>
     </aside>
   );
 };
 
-export default Sidebar; 
+export default Sidebar;

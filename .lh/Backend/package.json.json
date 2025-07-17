@@ -1,0 +1,22 @@
+{
+    "sourceFile": "backend/package.json",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1752728194493,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1752728813714,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -13,23 +13,27 @@\n     \"express\": \"^4.18.2\",\r\n     \"mongoose\": \"^8.0.3\",\r\n     \"bcryptjs\": \"^2.4.3\",\r\n     \"jsonwebtoken\": \"^9.0.2\",\r\n+    \"passport\": \"^0.7.0\",\r\n+    \"passport-google-oauth20\": \"^2.0.0\",\r\n+    \"passport-facebook\": \"^3.0.0\",\r\n     \"cors\": \"^2.8.5\",\r\n-    \"dotenv\": \"^16.3.1\",\r\n     \"helmet\": \"^7.1.0\",\r\n     \"express-rate-limit\": \"^7.1.5\",\r\n     \"express-validator\": \"^7.0.1\",\r\n+    \"dotenv\": \"^16.3.1\",\r\n     \"multer\": \"^1.4.5-lts.1\",\r\n-    \"passport\": \"^0.7.0\",\r\n-    \"passport-google-oauth20\": \"^2.0.0\",\r\n-    \"passport-facebook\": \"^3.0.0\",\r\n+    \"nodemailer\": \"^6.9.7\",\r\n     \"express-session\": \"^1.17.3\",\r\n     \"connect-mongo\": \"^5.1.0\",\r\n-    \"nodemailer\": \"^6.9.7\",\r\n+    \"compression\": \"^1.7.4\",\r\n+    \"morgan\": \"^1.10.0\",\r\n+    \"winston\": \"^3.11.0\",\r\n     \"joi\": \"^17.11.0\",\r\n-    \"compression\": \"^1.7.4\",\r\n-    \"morgan\": \"^1.10.0\"\r\n+    \"axios\": \"^1.6.2\",\r\n+    \"uuid\": \"^9.0.1\",\r\n+    \"moment\": \"^2.29.4\"\r\n   },\r\n   \"devDependencies\": {\r\n     \"nodemon\": \"^3.0.2\",\r\n     \"jest\": \"^29.7.0\",\r\n@@ -38,10 +42,11 @@\n   \"keywords\": [\r\n     \"gaming\",\r\n     \"casino\",\r\n     \"api\",\r\n+    \"express\",\r\n     \"mongodb\",\r\n-    \"express\"\r\n+    \"oauth\"\r\n   ],\r\n   \"author\": \"Dinero Sweeps Team\",\r\n   \"license\": \"MIT\"\r\n } \n\\ No newline at end of file\n"
+                }
+            ],
+            "date": 1752728194493,
+            "name": "Commit-0",
+            "content": "{\r\n  \"name\": \"dinero-sweeps-backend\",\r\n  \"version\": \"1.0.0\",\r\n  \"description\": \"Backend API for Dinero Sweeps gaming platform\",\r\n  \"main\": \"server.js\",\r\n  \"type\": \"module\",\r\n  \"scripts\": {\r\n    \"start\": \"node server.js\",\r\n    \"dev\": \"nodemon server.js\",\r\n    \"test\": \"jest\"\r\n  },\r\n  \"dependencies\": {\r\n    \"express\": \"^4.18.2\",\r\n    \"mongoose\": \"^8.0.3\",\r\n    \"bcryptjs\": \"^2.4.3\",\r\n    \"jsonwebtoken\": \"^9.0.2\",\r\n    \"cors\": \"^2.8.5\",\r\n    \"dotenv\": \"^16.3.1\",\r\n    \"helmet\": \"^7.1.0\",\r\n    \"express-rate-limit\": \"^7.1.5\",\r\n    \"express-validator\": \"^7.0.1\",\r\n    \"multer\": \"^1.4.5-lts.1\",\r\n    \"passport\": \"^0.7.0\",\r\n    \"passport-google-oauth20\": \"^2.0.0\",\r\n    \"passport-facebook\": \"^3.0.0\",\r\n    \"express-session\": \"^1.17.3\",\r\n    \"connect-mongo\": \"^5.1.0\",\r\n    \"nodemailer\": \"^6.9.7\",\r\n    \"joi\": \"^17.11.0\",\r\n    \"compression\": \"^1.7.4\",\r\n    \"morgan\": \"^1.10.0\"\r\n  },\r\n  \"devDependencies\": {\r\n    \"nodemon\": \"^3.0.2\",\r\n    \"jest\": \"^29.7.0\",\r\n    \"supertest\": \"^6.3.3\"\r\n  },\r\n  \"keywords\": [\r\n    \"gaming\",\r\n    \"casino\",\r\n    \"api\",\r\n    \"mongodb\",\r\n    \"express\"\r\n  ],\r\n  \"author\": \"Dinero Sweeps Team\",\r\n  \"license\": \"MIT\"\r\n} "
+        }
+    ]
+}

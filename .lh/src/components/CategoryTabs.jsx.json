@@ -1,0 +1,18 @@
+{
+    "sourceFile": "src/components/CategoryTabs.jsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1752748974426,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1752748974426,
+            "name": "Commit-0",
+            "content": "import React from \"react\";\r\n\r\nconst CategoryTabs = ({ categories, selected, onSelect }) => (\r\n  <div className=\"flex gap-2 mb-4 flex-wrap\">\r\n    {categories.map((cat) => (\r\n      <button\r\n        key={cat}\r\n        className={`px-4 py-1 rounded-full font-semibold text-sm transition-all duration-150\r\n          ${selected === cat ? \"bg-yellow-400 text-black shadow-glow\" : \"bg-gray-800 text-white hover:bg-yellow-400 hover:text-black\"}`}\r\n        onClick={() => onSelect(cat)}\r\n      >\r\n        {cat}\r\n      </button>\r\n    ))}\r\n  </div>\r\n);\r\n\r\nexport default CategoryTabs; "
+        }
+    ]
+}

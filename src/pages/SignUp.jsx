@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import banner from "../assets/banner.png";
-import Navbar from "../components/Navbar";
+import { Eye, EyeOff, AlertTriangle, CheckCircle, Calendar, User, Mail, Lock, ArrowDown } from "lucide-react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import CommonInput from "../components/CommonInput";
+import { useNavigate } from "react-router-dom";
 
 const initialState = {
   username: "",
@@ -34,7 +37,7 @@ const months = [
 const currentYear = new Date().getFullYear();
 const years = Array.from({ length: 100 }, (_, i) => currentYear - i);
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8004/api/v1';
 
 const SignUp = () => {
   const [form, setForm] = useState(initialState);
@@ -43,6 +46,8 @@ const SignUp = () => {
   const [submitting, setSubmitting] = useState(false);
   const [checkingUsername, setCheckingUsername] = useState(false);
   const [usernameAvailable, setUsernameAvailable] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
   const calculateAge = (year, month, day) => {
     if (!year || !month || !day) return 0;
@@ -57,25 +62,6 @@ const SignUp = () => {
     return age;
   };
 
-  // // Username uniqueness check
-  // const checkUsernameUnique = async (username) => {
-  //   if (!username) return;
-  //   setCheckingUsername(true);
-  //   setUsernameAvailable(null);
-  //   try {
-  //     const res = await fetch(`${API_BASE_URL}/user/check-username?username=${encodeURIComponent(username)}`);
-  //     const data = await res.json();
-  //     setUsernameAvailable(data.available);
-  //     setErrors((prev) => ({ ...prev, username: data.available ? undefined : "Username is already taken." }));
-  //   } catch (e) {
-  //     setUsernameAvailable(null);
-  //     setErrors((prev) => ({ ...prev, username: "Could not check username. Try again." }));
-  //   } finally {
-  //     setCheckingUsername(false);
-  //   }
-  // };
-
-  // Validation logic
   const validate = (values) => {
     const errs = {};
     if (!values.username) errs.username = "Username is required.";
@@ -107,12 +93,9 @@ const SignUp = () => {
 
   const handleBlur = (e) => {
     setTouched((prev) => ({ ...prev, [e.target.name]: true }));
-    if (e.target.name === "username" && form.username) {
-      // checkUsernameUnique(form.username); 
-    }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setTouched({
       username: true,
@@ -129,10 +112,49 @@ const SignUp = () => {
     setErrors(validationErrors);
     if (Object.keys(validationErrors).length === 0) {
       setSubmitting(true);
-      setTimeout(() => {
+      try {
+        const dob = `${form.dobYear}-${String(months.indexOf(form.dobMonth) + 1).padStart(2, '0')}-${String(form.dobDay).padStart(2, '0')}`;
+        const payload = {
+          username: form.username,
+          firstName: form.firstName,
+          lastName: form.lastName,
+          email: form.email,
+          password: form.password,
+          dateOfBirth: dob,
+          referredBy: form.referredBy || undefined,
+        };
+        const response = await fetch(`${API_BASE_URL}/auth/register`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+          },
+          body: JSON.stringify(payload),
+        });
+        const data = await response.json();
         setSubmitting(false);
-        alert("Signup successful! (Demo)");
-      }, 1000);
+        if (response.ok && data.success) {
+          toast.success("Signup successful! You can now log in.");
+          setForm(initialState);
+          setTouched({});
+          navigate("/login"); 
+        } else {
+          let errorMessage = "Signup failed";
+          if (data.errors && data.errors.length > 0) {
+            errorMessage = data.errors[0].message || data.errors[0];
+          } else if (data.message) {
+            errorMessage = data.message;
+          } else if (data.error) {
+            errorMessage = data.error;
+          }
+          toast.error(errorMessage);
+        }
+      } catch (error) {
+        setSubmitting(false);
+        let errorMessage = "An unexpected error occurred. Please try again.";
+        if (error.message) errorMessage = error.message;
+        toast.error(errorMessage);
+      }
     }
   };
 
@@ -143,71 +165,82 @@ const SignUp = () => {
   const isFormValid = Object.keys(errors).length === 0 && form.username && form.firstName && form.lastName && form.email && form.password && form.dobMonth && form.dobDay && form.dobYear && form.ageCheck && usernameAvailable !== false && calculateAge(form.dobYear, form.dobMonth, form.dobDay) >= 18;
 
   const handleGoogleSignup = () => {
-    window.location.href = 'http://54.234.145.12:8004/api/v1/auth/google';
+    window.location.href = `${API_BASE_URL}/auth/google`;
   };
 
   const handleFacebookSignup = () => {
-    window.location.href = 'http://54.234.145.12:8004/api/v1/auth/facebook';
+    window.location.href = `${API_BASE_URL}/auth/facebook`;
   };
 
   return (
-    <div className="min-vh-100 d-flex flex-column bg-black overflow-x-hidden" style={{ minHeight: '100vh' }}>
-      <div className="d-flex flex-grow-1 align-items-center justify-content-center w-100" style={{ minHeight: 0, width: '100%' }}>
-        <div className="card bg-black text-white shadow p-4 w-100 mt-3" style={{ maxWidth: 500 }}>
-          <img src={banner} alt="Promo Banner" className="img-fluid rounded mb-3" />
-          <form onSubmit={handleSubmit} noValidate>
-            <CommonInput
-              label="Username"
-              type="text"
-              id="username"
-              name="username"
-              placeholder="Username"
-              value={form.username}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              required
-              autoComplete="username"
-              touched={touched.username}
-              error={errors.username}
-              valid={touched.username && !errors.username && form.username && usernameAvailable}
-            />
-            {checkingUsername && <div className="text-info small">Checking username...</div>}
-            {touched.username && usernameAvailable && !errors.username && <div className="valid-feedback d-block">Username is available!</div>}
-
-            <CommonInput
-              label="Email Address"
-              type="email"
-              id="email"
-              name="email"
-              placeholder="Email Address"
-              value={form.email}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              required
-              autoComplete="email"
-              touched={touched.email}
-              error={errors.email}
-              valid={touched.email && !errors.email && form.email}
-            />
-
-            <CommonInput
-              label="Password"
-              type="password"
-              id="password"
-              name="password"
-              placeholder="Password"
-              value={form.password}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              required
-              autoComplete="new-password"
-              touched={touched.password}
-              error={errors.password}
-              valid={touched.password && !errors.password && form.password}
-            />
-
-            <div className="row mb-3">
-              <div className="col-12 col-md-6 mb-2 mb-md-0">
+    <>
+      <ToastContainer position="top-center" autoClose={3000} />
+      <div className="min-h-screen bg-black flex flex-col overflow-x-hidden">
+        <div className="flex-1 flex items-center justify-center w-full px-4 py-8">
+          <div className="w-full max-w-2xl p-6 bg-gray-900 rounded-2xl shadow-lg animate-fade-in">
+            <img src={banner} alt="Promo Banner" className="w-full rounded-lg mb-6" />
+            <form onSubmit={handleSubmit} noValidate className="space-y-6">
+              <CommonInput
+                label="Username"
+                type="text"
+                id="username"
+                name="username"
+                placeholder="Choose a username"
+                value={form.username}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                required
+                autoComplete="username"
+                touched={touched.username}
+                error={errors.username}
+                valid={touched.username && !errors.username && form.username && usernameAvailable}
+              />
+              <CommonInput
+                label="Email Address"
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Enter your email"
+                value={form.email}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                required
+                autoComplete="email"
+                touched={touched.email}
+                error={errors.email}
+                valid={touched.email && !errors.email && form.email}
+              />
+              <div className="space-y-2">
+                <label htmlFor="password" className="block text-sm font-medium text-white flex items-center">
+                  <Lock className="w-4 h-4 mr-2" />
+                  Password
+                </label>
+                <div className="relative">
+                  <CommonInput
+                    type={showPassword ? "text" : "password"}
+                    id="password"
+                    name="password"
+                    placeholder="Create a password"
+                    value={form.password}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    required
+                    autoComplete="new-password"
+                    touched={touched.password}
+                    error={errors.password}
+                    valid={touched.password && !errors.password && form.password}
+                    className="pr-12"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                  >
+                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  </button>
+                </div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <CommonInput
                   label="First Name"
                   type="text"
@@ -223,8 +256,6 @@ const SignUp = () => {
                   error={errors.firstName}
                   valid={touched.firstName && !errors.firstName && form.firstName}
                 />
-              </div>
-              <div className="col-12 col-md-6">
                 <CommonInput
                   label="Last Name"
                   type="text"
@@ -241,138 +272,160 @@ const SignUp = () => {
                   valid={touched.lastName && !errors.lastName && form.lastName}
                 />
               </div>
-            </div>
-
-            <label className="form-label">Date of Birth</label>
-            <div className="row mb-3">
-              <div className="col-4">
-                <label htmlFor="dobMonth" className="visually-hidden">Month</label>
-                <select
-                  className={`form-select${touched.dobMonth && errors.dobMonth ? " is-invalid" : ""}`}
-                  id="dobMonth"
-                  name="dobMonth"
-                  value={form.dobMonth}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  aria-invalid={!!(touched.dobMonth && errors.dobMonth)}
-                  required
-                >
-                  <option value="">Month</option>
-                  {months.map((m) => (
-                    <option key={m} value={m}>{m}</option>
-                  ))}
-                </select>
-                {touched.dobMonth && errors.dobMonth && <div className="invalid-feedback">{errors.dobMonth}</div>}
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-white flex items-center">
+                  <Calendar className="w-4 h-4 mr-2" />
+                  Date of Birth
+                </label>
+                <div className="grid grid-cols-3 gap-3">
+                  <select
+                    id="dobMonth"
+                    name="dobMonth"
+                    value={form.dobMonth}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    required
+                    className={`input-field ${touched.dobMonth && errors.dobMonth ? "border-danger-500 focus:ring-danger-500" : ""}`}
+                  >
+                    <option value="">Month</option>
+                    {months.map((m) => (
+                      <option key={m} value={m}>{m}</option>
+                    ))}
+                  </select>
+                  <CommonInput
+                    type="text"
+                    id="dobDay"
+                    name="dobDay"
+                    placeholder="Day"
+                    value={form.dobDay}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    required
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    touched={touched.dobDay}
+                    error={errors.dobDay}
+                    valid={touched.dobDay && !errors.dobDay && form.dobDay}
+                  />
+                  <select
+                    id="dobYear"
+                    name="dobYear"
+                    value={form.dobYear}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    required
+                    className={`input-field ${touched.dobYear && errors.dobYear ? "border-danger-500 focus:ring-danger-500" : ""}`}
+                  >
+                    <option value="">Year</option>
+                    {years.map((y) => (
+                      <option key={y} value={y}>{y}</option>
+                    ))}
+                  </select>
+                </div>
+                {(touched.dobMonth && errors.dobMonth) || (touched.dobDay && errors.dobDay) || (touched.dobYear && errors.dobYear) ? (
+                  <p className="text-danger-400 text-sm flex items-center">
+                    <AlertTriangle className="w-4 h-4 mr-1" />
+                    {errors.dobMonth || errors.dobDay || errors.dobYear}
+                  </p>
+                ) : null}
               </div>
-              <div className="col-4">
-                <label htmlFor="dobDay" className="visually-hidden">Day</label>
-                <input
-                  type="text"
-                  className={`form-control${touched.dobDay && errors.dobDay ? " is-invalid" : ""}`}
-                  id="dobDay"
-                  name="dobDay"
-                  placeholder="Day"
-                  value={form.dobDay}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  aria-invalid={!!(touched.dobDay && errors.dobDay)}
-                  required
-                  inputMode="numeric"
-                  pattern="[0-9]*"
-                />
-                {touched.dobDay && errors.dobDay && <div className="invalid-feedback">{errors.dobDay}</div>}
-              </div>
-              <div className="col-4">
-                <label htmlFor="dobYear" className="visually-hidden">Year</label>
-                <select
-                  className={`form-select${touched.dobYear && errors.dobYear ? " is-invalid" : ""}`}
-                  id="dobYear"
-                  name="dobYear"
-                  value={form.dobYear}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  aria-invalid={!!(touched.dobYear && errors.dobYear)}
-                  required
-                >
-                  <option value="">Year</option>
-                  {years.map((y) => (
-                    <option key={y} value={y}>{y}</option>
-                  ))}
-                </select>
-                {touched.dobYear && errors.dobYear && <div className="invalid-feedback">{errors.dobYear}</div>}
-              </div>
-            </div>
-
-            <CommonInput
-              label="Referred by (optional)"
-              type="text"
-              id="referredBy"
-              name="referredBy"
-              placeholder="Referred by (optional)"
-              value={form.referredBy}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              autoComplete="off"
-              touched={touched.referredBy}
-              error={errors.referredBy}
-              valid={touched.referredBy && !errors.referredBy && form.referredBy}
-            />
-
-            <div className="form-check mb-3">
-              <input
-                type="checkbox"
-                className={`form-check-input${touched.ageCheck && errors.ageCheck ? " is-invalid" : ""}`}
-                id="ageCheck"
-                name="ageCheck"
-                checked={form.ageCheck}
+              <CommonInput
+                label="Referred by (optional)"
+                type="text"
+                id="referredBy"
+                name="referredBy"
+                placeholder="Enter referral code"
+                value={form.referredBy}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                aria-invalid={!!(touched.ageCheck && errors.ageCheck)}
-                required
+                autoComplete="off"
+                touched={touched.referredBy}
+                error={errors.referredBy}
+                valid={touched.referredBy && !errors.referredBy && form.referredBy}
               />
-              <label className="form-check-label" htmlFor="ageCheck">
-                I am at least 18 years old and agree to the
-                <a href="#" className="text-warning text-decoration-none"> Terms of Service</a>
-              </label>
-              {touched.ageCheck && errors.ageCheck && <div className="invalid-feedback d-block">{errors.ageCheck}</div>}
-            </div>
-
-            <button
-              type="submit"
-              className="btn btn-warning text-dark fw-bold w-100 mb-3"
-              disabled={!isFormValid || submitting}
-              aria-disabled={!isFormValid || submitting}
-            >
-              {submitting ? "Signing Up..." : "Play Now"}
-            </button>
-
-            <hr className="border-secondary" />
-
-            <p className="text-center text-white-50">Or Register with</p>
-            <div className="d-flex flex-column flex-md-row justify-content-between gap-2">
+              <div className="space-y-2">
+                <div className="flex items-start">
+                  <input
+                    type="checkbox"
+                    id="ageCheck"
+                    name="ageCheck"
+                    checked={form.ageCheck}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    required
+                    className="mt-1 h-4 w-4 text-primary-600 focus:ring-primary-500 border-secondary-600 rounded bg-secondary-800"
+                  />
+                  <label htmlFor="ageCheck" className="ml-3 text-sm text-white">
+                    I am at least 18 years old and agree to the{" "}
+                    <a href="#" className="text-primary-400 hover:text-primary-300 font-medium transition-colors">
+                      Terms of Service
+                    </a>
+                  </label>
+                </div>
+                {touched.ageCheck && errors.ageCheck && (
+                  <p className="text-danger-400 text-sm flex items-center">
+                    <AlertTriangle className="w-4 h-4 mr-1" />
+                    {errors.ageCheck}
+                  </p>
+                )}
+              </div>
               <button
-                type="button"
-                className="btn btn-light d-flex align-items-center justify-content-center w-100"
-                onClick={handleGoogleSignup}
-                aria-label="Sign up with Google"
+                type="submit"
+                className="w-full py-3 text-lg font-semibold rounded-lg bg-gradient-to-r from-pink-500 to-yellow-400 text-white shadow hover:from-pink-600 hover:to-yellow-500 transition disabled:opacity-60 disabled:cursor-not-allowed"
+                disabled={submitting || !isFormValid}
               >
-                <img src="https://img.icons8.com/color/24/000000/google-logo.png" className="me-2" alt="Google" />
-                Google
+                {submitting ? (
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-black mr-3 inline-block align-middle"></div>
+                ) : (
+                  "Sign Up"
+                )}
               </button>
-              <button
-                type="button"
-                className="btn btn-light d-flex align-items-center justify-content-center w-100"
-                onClick={handleFacebookSignup}
-                aria-label="Sign up with Facebook"
-              >
-                <img src="https://img.icons8.com/color/24/000000/facebook-new.png" className="me-2" alt="Facebook" />
-                Facebook
-              </button>
-            </div>
-          </form>
+              <div className="border-t border-secondary-700"></div>
+              <div className="space-y-4">
+                <p className="text-center text-secondary-400 text-sm flex items-center justify-center">
+                  <ArrowDown className="w-4 h-4 mr-2" />
+                  Or Register with
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    onClick={handleGoogleSignup}
+                    className="w-full flex items-center justify-center px-4 py-3 bg-white text-black rounded-lg font-medium hover:bg-gray-100 transition-colors"
+                    aria-label="Sign up with Google"
+                  >
+                    <img
+                      src="https://img.icons8.com/color/24/000000/google-logo.png"
+                      className="w-5 h-5 mr-3"
+                      alt="Google"
+                    />
+                    Google
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleFacebookSignup}
+                    className="w-full flex items-center justify-center px-4 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                    aria-label="Sign up with Facebook"
+                  >
+                    <img
+                      src="https://img.icons8.com/color/24/000000/facebook-new.png"
+                      className="w-5 h-5 mr-3"
+                      alt="Facebook"
+                    />
+                    Facebook
+                  </button>
+                </div>
+              </div>
+            </form>
+            <p className="text-center text-secondary-400 text-sm mt-6">
+              Already have an account?{" "}
+              <a href="/login" className="text-primary-400 hover:text-primary-300 font-medium transition-colors">
+                Log in
+              </a>
+            </p>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

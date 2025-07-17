@@ -1,0 +1,26 @@
+{
+    "sourceFile": "backend/config/database.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1752728856868,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1752733275757,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -16,10 +16,8 @@\n       useUnifiedTopology: true,\r\n       maxPoolSize: 10,\r\n       serverSelectionTimeoutMS: 5000,\r\n       socketTimeoutMS: 45000,\r\n-      bufferCommands: false,\r\n-      bufferMaxEntries: 0,\r\n     });\r\n \r\n     logger.info(`MongoDB Connected: ${conn.connection.host}`);\r\n \r\n"
+                },
+                {
+                    "date": 1752746263795,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,50 +1,1 @@\n-import mongoose from 'mongoose';\r\n-import { logger } from './logger.js';\r\n-\r\n-const connectDB = async () => {\r\n-  try {\r\n-    const mongoURI = process.env.NODE_ENV === 'production' \r\n-      ? process.env.MONGODB_URI_PROD \r\n-      : process.env.MONGODB_URI;\r\n-\r\n-    if (!mongoURI) {\r\n-      throw new Error('MongoDB URI is not defined in environment variables');\r\n-    }\r\n-\r\n-    const conn = await mongoose.connect(mongoURI, {\r\n-      useNewUrlParser: true,\r\n-      useUnifiedTopology: true,\r\n-      maxPoolSize: 10,\r\n-      serverSelectionTimeoutMS: 5000,\r\n-      socketTimeoutMS: 45000,\r\n-    });\r\n-\r\n-    logger.info(`MongoDB Connected: ${conn.connection.host}`);\r\n-\r\n-    // Handle connection events\r\n-    mongoose.connection.on('error', (err) => {\r\n-      logger.error('MongoDB connection error:', err);\r\n-    });\r\n-\r\n-    mongoose.connection.on('disconnected', () => {\r\n-      logger.warn('MongoDB disconnected');\r\n-    });\r\n-\r\n-    mongoose.connection.on('reconnected', () => {\r\n-      logger.info('MongoDB reconnected');\r\n-    });\r\n-\r\n-    // Graceful shutdown\r\n-    process.on('SIGINT', async () => {\r\n-      await mongoose.connection.close();\r\n-      logger.info('MongoDB connection closed through app termination');\r\n-      process.exit(0);\r\n-    });\r\n-\r\n-  } catch (error) {\r\n-    logger.error('Database connection failed:', error);\r\n-    process.exit(1);\r\n-  }\r\n-};\r\n-\r\n-export { connectDB }; \n\\ No newline at end of file\n+ \n\\ No newline at end of file\n"
+                }
+            ],
+            "date": 1752728856868,
+            "name": "Commit-0",
+            "content": "import mongoose from 'mongoose';\r\nimport { logger } from './logger.js';\r\n\r\nconst connectDB = async () => {\r\n  try {\r\n    const mongoURI = process.env.NODE_ENV === 'production' \r\n      ? process.env.MONGODB_URI_PROD \r\n      : process.env.MONGODB_URI;\r\n\r\n    if (!mongoURI) {\r\n      throw new Error('MongoDB URI is not defined in environment variables');\r\n    }\r\n\r\n    const conn = await mongoose.connect(mongoURI, {\r\n      useNewUrlParser: true,\r\n      useUnifiedTopology: true,\r\n      maxPoolSize: 10,\r\n      serverSelectionTimeoutMS: 5000,\r\n      socketTimeoutMS: 45000,\r\n      bufferCommands: false,\r\n      bufferMaxEntries: 0,\r\n    });\r\n\r\n    logger.info(`MongoDB Connected: ${conn.connection.host}`);\r\n\r\n    // Handle connection events\r\n    mongoose.connection.on('error', (err) => {\r\n      logger.error('MongoDB connection error:', err);\r\n    });\r\n\r\n    mongoose.connection.on('disconnected', () => {\r\n      logger.warn('MongoDB disconnected');\r\n    });\r\n\r\n    mongoose.connection.on('reconnected', () => {\r\n      logger.info('MongoDB reconnected');\r\n    });\r\n\r\n    // Graceful shutdown\r\n    process.on('SIGINT', async () => {\r\n      await mongoose.connection.close();\r\n      logger.info('MongoDB connection closed through app termination');\r\n      process.exit(0);\r\n    });\r\n\r\n  } catch (error) {\r\n    logger.error('Database connection failed:', error);\r\n    process.exit(1);\r\n  }\r\n};\r\n\r\nexport { connectDB }; "
+        }
+    ]
+}

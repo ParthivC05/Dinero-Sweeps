@@ -1,0 +1,22 @@
+{
+    "sourceFile": "backend/routes/auth.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1752729080209,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1752746023146,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,41 +1,19 @@\n import express from 'express';\r\n import passport from 'passport';\r\n-import {\r\n-  register,\r\n-  login,\r\n-  googleAuth,\r\n-  googleCallback,\r\n-  facebookAuth,\r\n-  facebookCallback,\r\n-  forgotPassword,\r\n-  resetPassword,\r\n-  refreshToken,\r\n-  logout,\r\n-} from '../controllers/authController.js';\r\n-import {\r\n-  validateRegistration,\r\n-  validateLogin,\r\n-  validatePasswordReset,\r\n-} from '../middleware/validation.js';\r\n-import { protect } from '../middleware/auth.js';\r\n+import { register, login, googleAuth, googleCallback, facebookAuth, facebookCallback } from '../controllers/authController.js';\r\n \r\n const router = express.Router();\r\n \r\n-// Public routes\r\n-router.post('/register', validateRegistration, register);\r\n-router.post('/login', validateLogin, login);\r\n-router.post('/forgot-password', validatePasswordReset, forgotPassword);\r\n-router.post('/reset-password', resetPassword);\r\n-router.post('/refresh', refreshToken);\r\n+// Local auth\r\n+router.post('/register', register);\r\n+router.post('/login', login);\r\n \r\n-// OAuth routes\r\n+// Google OAuth\r\n router.get('/google', googleAuth, passport.authenticate('google', { scope: ['profile', 'email'] }));\r\n router.get('/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), googleCallback);\r\n \r\n+// Facebook OAuth\r\n router.get('/facebook', facebookAuth, passport.authenticate('facebook', { scope: ['email'] }));\r\n router.get('/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/login' }), facebookCallback);\r\n \r\n-// Protected routes\r\n-router.post('/logout', protect, logout);\r\n-\r\n export default router; \n\\ No newline at end of file\n"
+                }
+            ],
+            "date": 1752729080209,
+            "name": "Commit-0",
+            "content": "import express from 'express';\r\nimport passport from 'passport';\r\nimport {\r\n  register,\r\n  login,\r\n  googleAuth,\r\n  googleCallback,\r\n  facebookAuth,\r\n  facebookCallback,\r\n  forgotPassword,\r\n  resetPassword,\r\n  refreshToken,\r\n  logout,\r\n} from '../controllers/authController.js';\r\nimport {\r\n  validateRegistration,\r\n  validateLogin,\r\n  validatePasswordReset,\r\n} from '../middleware/validation.js';\r\nimport { protect } from '../middleware/auth.js';\r\n\r\nconst router = express.Router();\r\n\r\n// Public routes\r\nrouter.post('/register', validateRegistration, register);\r\nrouter.post('/login', validateLogin, login);\r\nrouter.post('/forgot-password', validatePasswordReset, forgotPassword);\r\nrouter.post('/reset-password', resetPassword);\r\nrouter.post('/refresh', refreshToken);\r\n\r\n// OAuth routes\r\nrouter.get('/google', googleAuth, passport.authenticate('google', { scope: ['profile', 'email'] }));\r\nrouter.get('/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), googleCallback);\r\n\r\nrouter.get('/facebook', facebookAuth, passport.authenticate('facebook', { scope: ['email'] }));\r\nrouter.get('/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/login' }), facebookCallback);\r\n\r\n// Protected routes\r\nrouter.post('/logout', protect, logout);\r\n\r\nexport default router; "
+        }
+    ]
+}

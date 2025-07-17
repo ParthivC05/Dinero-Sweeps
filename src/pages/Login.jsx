@@ -1,10 +1,11 @@
 import React, { useState, useRef } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 import banner from "../assets/banner.png";
-import Navbar from "../components/Navbar";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Eye, EyeOff, Shield, AlertTriangle, ArrowDown } from "lucide-react";
 import CommonInput from "../components/CommonInput";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [form, setForm] = useState({ username: "", password: "" });
@@ -13,25 +14,21 @@ const Login = () => {
   const [submitting, setSubmitting] = useState(false);
   const [captchaToken, setCaptchaToken] = useState(null);
   const [loginError, setLoginError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const recaptchaRef = useRef(null);
+  const navigate = useNavigate();
 
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://54.234.145.12:8004/api/v1';
-
-  const LOGIN_ENDPOINT = `${API_BASE_URL}/user/login`; 
-
-  const recaptchaSiteKey =
-    import.meta.env.VITE_RECAPTCHA_SITE_KEY ||
-    "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI";
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+  const LOGIN_ENDPOINT = `${API_BASE_URL}/auth/login`;
+  const recaptchaSiteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY || "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI";
 
   const validate = (values) => {
     const errs = {};
     if (!values.username) errs.username = "Username is required.";
     if (!values.password) errs.password = "Password is required.";
     else if (!/^(?=.*[A-Z])(?=.*\d).{8,20}$/.test(values.password))
-      errs.password =
-        "Password must be 8-20 characters with at least one number and one uppercase letter.";
-    if (!captchaToken)
-      errs.captcha = "Please complete the reCAPTCHA verification.";
+      errs.password = "Password must be 8-20 characters with at least one number and one uppercase letter.";
+    if (!captchaToken) errs.captcha = "Please complete the reCAPTCHA verification.";
     return errs;
   };
 
@@ -69,80 +66,61 @@ const Login = () => {
       }));
       return;
     }
-    alert(`Password reset link sent for username: ${form.username} (Demo)`);
+    toast.info(`Password reset link sent for username: ${form.username} (Demo)`);
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = 'http://localhost:8004/api/v1/auth/google';
+    window.location.href = `${API_BASE_URL}/auth/google`;
   };
 
   const handleFacebookLogin = () => {
-    window.location.href = 'http://localhost:8004/api/v1/auth/facebook';
+    window.location.href = `${API_BASE_URL}/auth/facebook`;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setTouched({ username: true, password: true });
-    setLoginError(""); 
-
+    setLoginError("");
     const validationErrors = validate(form);
     setErrors(validationErrors);
-
     if (Object.keys(validationErrors).length === 0) {
       setSubmitting(true);
-
       try {
         const requestPayload = {
           username: form.username,
           password: form.password,
           captchaToken: captchaToken,
         };
-
-        console.log("Sending login request to:", LOGIN_ENDPOINT);
-        console.log("Request payload:", requestPayload);
-
         const response = await fetch(LOGIN_ENDPOINT, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             "Accept": "application/json",
           },
-          credentials: 'include', // Include cookies for CORS
+          credentials: 'include',
           body: JSON.stringify(requestPayload),
         });
-
-        console.log("Response status:", response.status);
-        console.log("Response headers:", response.headers);
-
         let responseData = {};
         const text = await response.text();
         if (text) {
           try {
             responseData = JSON.parse(text);
           } catch (parseError) {
-            console.error("Failed to parse response:", parseError);
             responseData = { message: "Invalid response format" };
           }
         }
-        console.log("Response data:", responseData);
-
         setSubmitting(false);
-
         if (response.ok && responseData.data && responseData.data.user && responseData.data.accessToken) {
-          
           localStorage.setItem("authToken", responseData.data.accessToken);
           localStorage.setItem("user", JSON.stringify(responseData.data.user));
           toast.success("Login successful!");
-         
           if (recaptchaRef.current) {
             recaptchaRef.current.reset();
             setCaptchaToken(null);
           }
-          
+          navigate("/"); 
         } else {
-          
           let errorMessage = "Login failed";
-          
           if (responseData.errors && responseData.errors.length > 0) {
             errorMessage = responseData.errors[0].message || responseData.errors[0];
           } else if (responseData.message) {
@@ -162,30 +140,23 @@ const Login = () => {
           } else {
             errorMessage = `Login failed (${response.status})`;
           }
-          
           setLoginError(errorMessage);
           toast.error(errorMessage);
-          
           if (recaptchaRef.current) {
             recaptchaRef.current.reset();
             setCaptchaToken(null);
           }
         }
       } catch (error) {
-        console.error("Login error:", error);
         setSubmitting(false);
-        
         let errorMessage = "An unexpected error occurred. Please try again.";
-        
         if (error.name === 'TypeError' && error.message.includes('fetch')) {
           errorMessage = "Network error. Please check your connection and try again.";
         } else if (error.message) {
           errorMessage = error.message;
         }
-        
         setLoginError(errorMessage);
         toast.error(errorMessage);
-        
         if (recaptchaRef.current) {
           recaptchaRef.current.reset();
           setCaptchaToken(null);
@@ -196,7 +167,6 @@ const Login = () => {
 
   React.useEffect(() => {
     setErrors(validate(form));
-    
   }, [form, captchaToken]);
 
   const isFormValid =
@@ -208,36 +178,25 @@ const Login = () => {
   return (
     <>
       <ToastContainer position="top-center" autoClose={3000} />
-      <div
-        className="min-vh-100 d-flex flex-column bg-black overflow-x-hidden"
-        style={{ minHeight: "100vh" }}
-      >
-        <div
-          className="d-flex flex-grow-1 align-items-center justify-content-center w-100 px-2"
-          style={{ minHeight: 0, width: "100%" }}
-        >
-          <div
-            className="card bg-black text-white shadow p-4 w-100 mt-3"
-            style={{ maxWidth: 500 }}
-          >
+      <div className="min-h-screen bg-black flex flex-col overflow-x-hidden">
+        <div className="flex-1 flex items-center justify-center w-full px-4 py-8">
+          <div className="w-full max-w-md p-6 bg-gray-900 rounded-2xl shadow-lg animate-fade-in">
             <img
               src={banner}
               alt="Promo Banner"
-              className="img-fluid rounded mb-3"
+              className="w-full rounded-lg mb-6"
             />
-
-            <form onSubmit={handleSubmit} noValidate>
+            <form onSubmit={handleSubmit} noValidate className="space-y-6">
               {loginError && (
                 <div
-                  className="alert alert-danger mb-3"
+                  className="flex items-center p-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400"
                   role="alert"
                   aria-live="polite"
                 >
-                  <i className="bi bi-exclamation-triangle me-2"></i>
-                  {loginError}
+                  <AlertTriangle className="w-5 h-5 mr-3 flex-shrink-0" />
+                  <span className="text-sm font-medium">{loginError}</span>
                 </div>
               )}
-
               <CommonInput
                 label="Username"
                 type="text"
@@ -254,30 +213,41 @@ const Login = () => {
                 valid={touched.username && !errors.username && form.username}
                 autoFocus
               />
-
-              <CommonInput
-                label="Password"
-                type="password"
-                id="password"
-                name="password"
-                placeholder="Enter your password"
-                value={form.password}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                required
-                autoComplete="current-password"
-                touched={touched.password}
-                error={errors.password}
-                valid={touched.password && !errors.password && form.password}
-              />
-
-              <div className="mb-3">
-                <div className="form-label mb-2">
-                  <i className="bi bi-shield-check me-2"></i>
+              <div className="space-y-2">
+                <label htmlFor="password" className="block text-sm font-medium text-white">
+                  Password
+                </label>
+                <div className="relative">
+                  <CommonInput
+                    type={showPassword ? "text" : "password"}
+                    id="password"
+                    name="password"
+                    placeholder="Enter your password"
+                    value={form.password}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    required
+                    autoComplete="current-password"
+                    touched={touched.password}
+                    error={errors.password}
+                    valid={touched.password && !errors.password && form.password}
+                    className="pr-12"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                  >
+                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  </button>
+                </div>
+              </div>
+              <div className="space-y-3">
+                <div className="flex items-center text-sm font-medium text-white">
+                  <Shield className="w-5 h-5 mr-2 text-yellow-400" />
                   Security Verification
                 </div>
-                <div className="d-flex flex-column align-items-center">
-                  
+                <div className="flex flex-col items-center">
                   <ReCAPTCHA
                     ref={recaptchaRef}
                     sitekey={recaptchaSiteKey}
@@ -288,104 +258,89 @@ const Login = () => {
                     aria-label="Complete reCAPTCHA verification"
                   />
                   {errors.captcha && (
-                    <div className="text-danger small mt-2" role="alert">
-                      <i className="bi bi-exclamation-circle me-1"></i>
+                    <p className="text-red-400 text-sm mt-2 flex items-center">
+                      <AlertTriangle className="w-4 h-4 mr-1" />
                       {errors.captcha}
-                    </div>
+                    </p>
                   )}
                 </div>
               </div>
-
               <button
                 type="submit"
-                className="btn btn-warning text-dark fw-bold w-100 mb-3"
-                disabled={!isFormValid || submitting}
-                aria-disabled={!isFormValid || submitting}
-                aria-describedby={!isFormValid ? "formErrors" : undefined}
+                className="w-full py-3 text-lg font-semibold rounded-lg bg-gradient-to-r from-pink-500 to-yellow-400 text-white shadow hover:from-pink-600 hover:to-yellow-500 transition disabled:opacity-60 disabled:cursor-not-allowed"
+                disabled={submitting || !isFormValid}
               >
                 {submitting ? (
-                  <>
-                    <span
-                      className="spinner-border spinner-border-sm me-2"
-                      role="status"
-                      aria-hidden="true"
-                    ></span>
-                    Signing In...
-                  </>
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-black mr-3 inline-block align-middle"></div>
                 ) : (
-                  "Sign In"
+                  "Login"
                 )}
               </button>
-
               {!isFormValid && (
                 <div id="formErrors" className="sr-only" aria-live="polite">
                   Please fix the form errors above to continue.
                 </div>
               )}
-
-              <div className="text-center mb-3">
+              <div className="text-center">
                 <button
                   type="button"
-                  className="btn btn-link text-warning text-decoration-none p-0"
+                  className="text-primary-400 hover:text-primary-300 text-sm font-medium transition-colors"
                   onClick={handleForgotPassword}
                   aria-describedby="forgotPasswordHelp"
                 >
-                  <i className="bi bi-question-circle me-1"></i>
                   Forgot your password?
                 </button>
-                <small
+                <p
                   id="forgotPasswordHelp"
-                  className="d-block text-muted mt-1"
+                  className="text-secondary-400 text-xs mt-1"
                 >
                   Enter your username above and click this link to reset your password.
-                </small>
+                </p>
               </div>
-
-              <hr className="border-secondary" />
-
-              <p className="text-center text-white-50 mb-3">
-                <i className="bi bi-arrow-down me-2"></i>
-                Or sign in with
-              </p>
-
-              <div className="d-flex flex-column flex-md-row justify-content-center gap-2">
-                <button
-                  type="button"
-                  className="btn btn-light d-flex align-items-center justify-content-center w-100"
-                  onClick={handleGoogleLogin}
-                  aria-label="Sign in with Google account"
-                >
-                  <img
-                    src="https://img.icons8.com/color/24/000000/google-logo.png"
-                    className="me-2"
-                    alt="Google logo"
-                    aria-hidden="true"
-                  />
-                  <span>Continue with Google</span>
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-primary d-flex align-items-center justify-content-center w-100"
-                  onClick={handleFacebookLogin}
-                  aria-label="Sign in with Facebook account"
-                >
-                  <img
-                    src="https://img.icons8.com/color/24/000000/facebook-new.png"
-                    className="me-2"
-                    alt="Facebook logo"
-                    aria-hidden="true"
-                  />
-                  <span>Continue with Facebook</span>
-                </button>
+              <div className="border-t border-secondary-700"></div>
+              <div className="space-y-4">
+                <p className="text-center text-secondary-400 text-sm flex items-center justify-center">
+                  <ArrowDown className="w-4 h-4 mr-2" />
+                  Or sign in with
+                </p>
+                <div className="space-y-3">
+                  <button
+                    type="button"
+                    onClick={handleGoogleLogin}
+                    className="w-full flex items-center justify-center px-4 py-3 bg-white text-black rounded-lg font-medium hover:bg-gray-100 transition-colors"
+                    aria-label="Sign in with Google account"
+                  >
+                    <img
+                      src="https://img.icons8.com/color/24/000000/google-logo.png"
+                      className="w-5 h-5 mr-3"
+                      alt="Google logo"
+                      aria-hidden="true"
+                    />
+                    Continue with Google
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleFacebookLogin}
+                    className="w-full flex items-center justify-center px-4 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                    aria-label="Sign in with Facebook account"
+                  >
+                    <img
+                      src="https://img.icons8.com/color/24/000000/facebook-new.png"
+                      className="w-5 h-5 mr-3"
+                      alt="Facebook logo"
+                      aria-hidden="true"
+                    />
+                    Continue with Facebook
+                  </button>
+                </div>
               </div>
-
-              <div className="text-center mt-3">
-                <small className="text-muted">
+              <div className="text-center">
+                <p className="text-secondary-400 text-sm">
                   Don't have an account?{" "}
-                  <a href="/signup" className="text-warning text-decoration-none">
+                  <a href="/signup" className="text-primary-400 hover:text-primary-300 font-medium transition-colors">
                     Sign up here
                   </a>
-                </small>
+                </p>
               </div>
             </form>
           </div>

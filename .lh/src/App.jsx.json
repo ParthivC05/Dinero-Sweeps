@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 9,
+            "activePatchIndex": 15,
             "patches": [
                 {
                     "date": 1752474442231,
@@ -44,6 +44,30 @@
                 {
                     "date": 1752668631182,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,25 +1,22 @@\n-import React from 'react';\r\n-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';\r\n-import Navbar from './components/Navbar';\r\n-import SignUp from './pages/SignUp';\r\n-import Login from './pages/Login';\r\n-import OAuthCallback from './pages/OAuthCallback';\r\n+import React from \"react\";\r\n+import { BrowserRouter, Routes, Route } from \"react-router-dom\";\r\n+import LandingPage from \"./pages/LandingPage\";\r\n+import Login from \"./pages/Login\";\r\n+import SignUp from \"./pages/SignUp\";\r\n+import OAuthCallback from \"./pages/OAuthCallback\";\r\n import './App.css';\r\n \r\n function App() {\r\n   return (\r\n-    <div>\r\n-      <BrowserRouter>\r\n-        <Navbar />\r\n-        <Routes>\r\n-          <Route path=\"/\" element={<Navigate to=\"/login\" replace />} />\r\n-          <Route path=\"/login\" element={<Login />} />\r\n-          <Route path=\"/signup\" element={<SignUp />} />\r\n-          <Route path=\"/oauth-callback\" element={<OAuthCallback />} />\r\n-        </Routes>\r\n-      </BrowserRouter>\r\n-    </div>\r\n+    <BrowserRouter>\r\n+      <Routes>\r\n+        <Route path=\"/\" element={<LandingPage />} />\r\n+        <Route path=\"/login\" element={<Login />} />\r\n+        <Route path=\"/signup\" element={<SignUp />} />\r\n+        <Route path=\"/oauth-callback\" element={<OAuthCallback />} />\r\n+      </Routes>\r\n+    </BrowserRouter>\r\n   );\r\n }\r\n \r\n export default App;\r\n"
+                },
+                {
+                    "date": 1752729934174,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -9,9 +9,9 @@\n function App() {\r\n   return (\r\n     <BrowserRouter>\r\n       <Routes>\r\n-        <Route path=\"/\" element={<LandingPage />} />\r\n+        {/* <Route path=\"/\" element={<LandingPage />} /> */}\r\n         <Route path=\"/login\" element={<Login />} />\r\n         <Route path=\"/signup\" element={<SignUp />} />\r\n         <Route path=\"/oauth-callback\" element={<OAuthCallback />} />\r\n       </Routes>\r\n"
+                },
+                {
+                    "date": 1752729998071,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,6 @@\n import React from \"react\";\r\n import { BrowserRouter, Routes, Route } from \"react-router-dom\";\r\n-import LandingPage from \"./pages/LandingPage\";\r\n import Login from \"./pages/Login\";\r\n import SignUp from \"./pages/SignUp\";\r\n import OAuthCallback from \"./pages/OAuthCallback\";\r\n import './App.css';\r\n"
+                },
+                {
+                    "date": 1752749082977,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -8,9 +8,9 @@\n function App() {\r\n   return (\r\n     <BrowserRouter>\r\n       <Routes>\r\n-        {/* <Route path=\"/\" element={<LandingPage />} /> */}\r\n+        <Route path=\"/\" element={<LandingPage />} />\r\n         <Route path=\"/login\" element={<Login />} />\r\n         <Route path=\"/signup\" element={<SignUp />} />\r\n         <Route path=\"/oauth-callback\" element={<OAuthCallback />} />\r\n       </Routes>\r\n"
+                },
+                {
+                    "date": 1752749089777,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -8,9 +8,9 @@\n function App() {\r\n   return (\r\n     <BrowserRouter>\r\n       <Routes>\r\n-        <Route path=\"/\" element={<LandingPage />} />\r\n+        <Route path=\"/\" element={< />} />\r\n         <Route path=\"/login\" element={<Login />} />\r\n         <Route path=\"/signup\" element={<SignUp />} />\r\n         <Route path=\"/oauth-callback\" element={<OAuthCallback />} />\r\n       </Routes>\r\n"
+                },
+                {
+                    "date": 1752749120234,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -8,9 +8,9 @@\n function App() {\r\n   return (\r\n     <BrowserRouter>\r\n       <Routes>\r\n-        <Route path=\"/\" element={< />} />\r\n+        <Route path=\"/\" element={<LandingPage />} />\r\n         <Route path=\"/login\" element={<Login />} />\r\n         <Route path=\"/signup\" element={<SignUp />} />\r\n         <Route path=\"/oauth-callback\" element={<OAuthCallback />} />\r\n       </Routes>\r\n"
+                },
+                {
+                    "date": 1752749132420,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -3,8 +3,9 @@\n import Login from \"./pages/Login\";\r\n import SignUp from \"./pages/SignUp\";\r\n import OAuthCallback from \"./pages/OAuthCallback\";\r\n import './App.css';\r\n+import LandingPage from \"./pages/LandingPage\";\r\n \r\n function App() {\r\n   return (\r\n     <BrowserRouter>\r\n"
                 }
             ],
             "date": 1752474442231,
