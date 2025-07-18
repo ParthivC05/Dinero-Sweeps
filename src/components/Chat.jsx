@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { io } from 'socket.io-client';
 
-const socket = io(import.meta.env.VITE_API_BASE_URL); 
+const socket = io(import.meta.env.VITE_SOCKET_URL); 
 
 const LOCAL_STORAGE_KEY = 'chat_messages';
 
