@@ -25,9 +25,27 @@ const allowedOrigins = [
   'https://dinero-sweeps.vercel.app'
 ];
 
+// CORS origin function for both Express and Socket.IO
+const corsOriginFunction = function (origin, callback) {
+  // allow requests with no origin (like mobile apps, curl, etc.)
+  if (!origin) return callback(null, true);
+  if (allowedOrigins.includes(origin)) {
+    return callback(null, true);
+  } else {
+    return callback(new Error('Not allowed by CORS'));
+  }
+};
+
+// Express CORS
+app.use(cors({
+  origin: corsOriginFunction,
+  credentials: true,
+}));
+
+// Socket.IO CORS
 const io = new SocketIOServer(server, {
   cors: {
-    origin: allowedOrigins,
+    origin: corsOriginFunction,
     credentials: true,
   },
 });
@@ -44,20 +62,6 @@ mongoose.connect(process.env.MONGODB_URI, {
 .catch((err) => {
   console.error('❌ MongoDB connection error:', err.message);
 });
-
-// CORS for frontend
-app.use(cors({
-  origin: function (origin, callback) {
-    // allow requests with no origin (like mobile apps, curl, etc.)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    } else {
-      return callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true,
-}));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

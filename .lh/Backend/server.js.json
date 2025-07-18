@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 17,
+            "activePatchIndex": 18,
             "patches": [
                 {
                     "date": 1752728229743,
@@ -76,6 +76,10 @@
                 {
                     "date": 1752814743378,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -26,17 +26,9 @@\n ];\r\n \r\n const io = new SocketIOServer(server, {\r\n   cors: {\r\n-    origin: function (origin, callback) {\r\n-      // allow requests with no origin (like mobile apps, curl, etc.)\r\n-      if (!origin) return callback(null, true);\r\n-      if (allowedOrigins.includes(origin)) {\r\n-        return callback(null, true);\r\n-      } else {\r\n-        return callback(new Error('Not allowed by CORS'));\r\n-      }\r\n-    },\r\n+    origin: allowedOrigins,\r\n     credentials: true,\r\n   },\r\n });\r\n const PORT = process.env.PORT || 8004;\r\n"
+                },
+                {
+                    "date": 1752817532078,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -24,11 +24,29 @@\n   'http://localhost:5173',\r\n   'https://dinero-sweeps.vercel.app'\r\n ];\r\n \r\n+// CORS origin function for both Express and Socket.IO\r\n+const corsOriginFunction = function (origin, callback) {\r\n+  // allow requests with no origin (like mobile apps, curl, etc.)\r\n+  if (!origin) return callback(null, true);\r\n+  if (allowedOrigins.includes(origin)) {\r\n+    return callback(null, true);\r\n+  } else {\r\n+    return callback(new Error('Not allowed by CORS'));\r\n+  }\r\n+};\r\n+\r\n+// Express CORS\r\n+app.use(cors({\r\n+  origin: corsOriginFunction,\r\n+  credentials: true,\r\n+}));\r\n+\r\n+// Socket.IO CORS\r\n const io = new SocketIOServer(server, {\r\n   cors: {\r\n-    origin: allowedOrigins,\r\n+    origin: corsOriginFunction,\r\n     credentials: true,\r\n   },\r\n });\r\n const PORT = process.env.PORT || 8004;\r\n@@ -44,22 +62,8 @@\n .catch((err) => {\r\n   console.error('❌ MongoDB connection error:', err.message);\r\n });\r\n \r\n-// CORS for frontend\r\n-app.use(cors({\r\n-  origin: function (origin, callback) {\r\n-    // allow requests with no origin (like mobile apps, curl, etc.)\r\n-    if (!origin) return callback(null, true);\r\n-    if (allowedOrigins.includes(origin)) {\r\n-      return callback(null, true);\r\n-    } else {\r\n-      return callback(new Error('Not allowed by CORS'));\r\n-    }\r\n-  },\r\n-  credentials: true,\r\n-}));\r\n-\r\n app.use(express.json());\r\n app.use(express.urlencoded({ extended: true }));\r\n \r\n // Session (for OAuth) - Using MongoDB store for production\r\n"
                 }
             ],
             "date": 1752728229743,
