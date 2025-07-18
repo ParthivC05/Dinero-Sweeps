@@ -2,8 +2,11 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import passport from 'passport';
+import helmet from 'helmet';
+import compression from 'compression';
 import session from 'express-session';
 import mongoose from 'mongoose';
+import MongoStore from 'connect-mongo';
 import authRoutes from './routes/auth.js';
 import passportConfig from './config/passport.js';
 import http from 'http';
@@ -12,9 +15,19 @@ import 'dotenv/config';
 
 const app = express();
 const server = http.createServer(app);
+
+// Production security middleware
+app.use(helmet());
+app.use(compression());
+
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://dinero-sweeps.vercel.app'
+];
+
 const io = new SocketIOServer(server, {
   cors: {
-    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+    origin: allowedOrigins,
     credentials: true,
   },
 });
@@ -34,18 +47,36 @@ mongoose.connect(process.env.MONGODB_URI, {
 
 // CORS for frontend
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  origin: function (origin, callback) {
+    // allow requests with no origin (like mobile apps, curl, etc.)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      return callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
 }));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Session (for OAuth)
+// Session (for OAuth) - Using MongoDB store for production
 app.use(session({
   secret: process.env.SESSION_SECRET || 'secret',
   resave: false,
   saveUninitialized: false,
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGODB_URI,
+    collectionName: 'sessions',
+    ttl: 24 * 60 * 60, // 1 day
+  }),
+  cookie: {
+    secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000, // 1 day
+  },
 }));
 
 // Passport

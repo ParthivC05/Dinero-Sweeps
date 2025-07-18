@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 9,
+            "activePatchIndex": 17,
             "patches": [
                 {
                     "date": 1752728229743,
@@ -44,6 +44,38 @@
                 {
                     "date": 1752813418689,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -23,8 +23,14 @@\n // MongoDB connection\r\n mongoose.connect(process.env.MONGODB_URI, {\r\n   useNewUrlParser: true,\r\n   useUnifiedTopology: true,\r\n+})\r\n+.then(() => {\r\n+  console.log('✅ MongoDB connected successfully');\r\n+})\r\n+.catch((err) => {\r\n+  console.error('❌ MongoDB connection error:', err.message);\r\n });\r\n \r\n // CORS for frontend\r\n app.use(cors({\r\n"
+                },
+                {
+                    "date": 1752813779124,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -3,8 +3,9 @@\n import dotenv from 'dotenv';\r\n import passport from 'passport';\r\n import session from 'express-session';\r\n import mongoose from 'mongoose';\r\n+import MongoStore from 'connect-mongo';\r\n import authRoutes from './routes/auth.js';\r\n import passportConfig from './config/passport.js';\r\n import http from 'http';\r\n import { Server as SocketIOServer } from 'socket.io';\r\n@@ -85,6 +86,7 @@\n   });\r\n });\r\n \r\n server.listen(PORT, () => {\r\n-  console.log(`Server running on http://localhost:${PORT}`);\r\n+  console.log(`🚀 Server running on http://localhost:${PORT}`);\r\n+  console.log(`📡 Socket.IO server ready`);\r\n }); \n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1752813784886,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -41,13 +41,23 @@\n \r\n app.use(express.json());\r\n app.use(express.urlencoded({ extended: true }));\r\n \r\n-// Session (for OAuth)\r\n+// Session (for OAuth) - Using MongoDB store for production\r\n app.use(session({\r\n   secret: process.env.SESSION_SECRET || 'secret',\r\n   resave: false,\r\n   saveUninitialized: false,\r\n+  store: MongoStore.create({\r\n+    mongoUrl: process.env.MONGODB_URI,\r\n+    collectionName: 'sessions',\r\n+    ttl: 24 * 60 * 60, // 1 day\r\n+  }),\r\n+  cookie: {\r\n+    secure: process.env.NODE_ENV === 'production', // Use secure cookies in production\r\n+    httpOnly: true,\r\n+    maxAge: 24 * 60 * 60 * 1000, // 1 day\r\n+  },\r\n }));\r\n \r\n // Passport\r\n passportConfig(passport);\r\n"
+                },
+                {
+                    "date": 1752813798194,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,10 @@\n import express from 'express';\r\n import cors from 'cors';\r\n import dotenv from 'dotenv';\r\n import passport from 'passport';\r\n+import helmet from 'helmet';\r\n+import compression from 'compression';\r\n import session from 'express-session';\r\n import mongoose from 'mongoose';\r\n import MongoStore from 'connect-mongo';\r\n import authRoutes from './routes/auth.js';\r\n@@ -12,8 +14,13 @@\n import 'dotenv/config';\r\n \r\n const app = express();\r\n const server = http.createServer(app);\r\n+\r\n+// Production security middleware\r\n+app.use(helmet());\r\n+app.use(compression());\r\n+\r\n const io = new SocketIOServer(server, {\r\n   cors: {\r\n     origin: process.env.FRONTEND_URL || 'http://localhost:5173',\r\n     credentials: true,\r\n"
+                },
+                {
+                    "date": 1752814667350,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -41,9 +41,9 @@\n });\r\n \r\n // CORS for frontend\r\n app.use(cors({\r\n-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',\r\n+  origin: process.env.FRONTEND_URL || 'http://localhost:5173' || ,\r\n   credentials: true,\r\n }));\r\n \r\n app.use(express.json());\r\n"
+                },
+                {
+                    "date": 1752814674288,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -41,9 +41,9 @@\n });\r\n \r\n // CORS for frontend\r\n app.use(cors({\r\n-  origin: process.env.FRONTEND_URL || 'http://localhost:5173' || ,\r\n+  origin: process.env.FRONTEND_URL || 'http://localhost:5173' || '',\r\n   credentials: true,\r\n }));\r\n \r\n app.use(express.json());\r\n"
+                },
+                {
+                    "date": 1752814686491,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -41,9 +41,9 @@\n });\r\n \r\n // CORS for frontend\r\n app.use(cors({\r\n-  origin: process.env.FRONTEND_URL || 'http://localhost:5173' || '',\r\n+  origin: process.env.FRONTEND_URL || 'http://localhost:5173' || 'https://dinero-sweeps.vercel.app/',\r\n   credentials: true,\r\n }));\r\n \r\n app.use(express.json());\r\n"
+                },
+                {
+                    "date": 1752814726326,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -19,11 +19,24 @@\n // Production security middleware\r\n app.use(helmet());\r\n app.use(compression());\r\n \r\n+const allowedOrigins = [\r\n+  'http://localhost:5173',\r\n+  'https://dinero-sweeps.vercel.app'\r\n+];\r\n+\r\n const io = new SocketIOServer(server, {\r\n   cors: {\r\n-    origin: process.env.FRONTEND_URL || 'http://localhost:5173',\r\n+    origin: function (origin, callback) {\r\n+      // allow requests with no origin (like mobile apps, curl, etc.)\r\n+      if (!origin) return callback(null, true);\r\n+      if (allowedOrigins.includes(origin)) {\r\n+        return callback(null, true);\r\n+      } else {\r\n+        return callback(new Error('Not allowed by CORS'));\r\n+      }\r\n+    },\r\n     credentials: true,\r\n   },\r\n });\r\n const PORT = process.env.PORT || 8004;\r\n@@ -41,9 +54,17 @@\n });\r\n \r\n // CORS for frontend\r\n app.use(cors({\r\n-  origin: process.env.FRONTEND_URL || 'http://localhost:5173' || 'https://dinero-sweeps.vercel.app/',\r\n+  origin: function (origin, callback) {\r\n+    // allow requests with no origin (like mobile apps, curl, etc.)\r\n+    if (!origin) return callback(null, true);\r\n+    if (allowedOrigins.includes(origin)) {\r\n+      return callback(null, true);\r\n+    } else {\r\n+      return callback(new Error('Not allowed by CORS'));\r\n+    }\r\n+  },\r\n   credentials: true,\r\n }));\r\n \r\n app.use(express.json());\r\n"
+                },
+                {
+                    "date": 1752814743378,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -26,17 +26,9 @@\n ];\r\n \r\n const io = new SocketIOServer(server, {\r\n   cors: {\r\n-    origin: function (origin, callback) {\r\n-      // allow requests with no origin (like mobile apps, curl, etc.)\r\n-      if (!origin) return callback(null, true);\r\n-      if (allowedOrigins.includes(origin)) {\r\n-        return callback(null, true);\r\n-      } else {\r\n-        return callback(new Error('Not allowed by CORS'));\r\n-      }\r\n-    },\r\n+    origin: allowedOrigins,\r\n     credentials: true,\r\n   },\r\n });\r\n const PORT = process.env.PORT || 8004;\r\n"
                 }
             ],
             "date": 1752728229743,
