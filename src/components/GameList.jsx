@@ -1,12 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
-import { FaSearch } from "react-icons/fa";
+import { FaSearch, FaPlay, FaRegSmile } from "react-icons/fa";
 import slider1 from "../assets/slider1.png";
 import slider2 from "../assets/slider2.png";
-import game1 from '../assets/game1.png';
-import game2 from '../assets/game2.png';
-import game3 from '../assets/game3.png';
-import game4 from '../assets/game4.png';
-import game5 from '../assets/game5.png';
 
 const categories = [
   "Promotions", "Gameplay", "Gameway", "Net Gaming", "Tada Gaming", "Hacksaw gaming"
@@ -14,14 +9,6 @@ const categories = [
 
 const gameSections = [
   "Slots", "Scratchcards", "Keno", "Fishing", "Scratch-card", "Shooting", "Crash game", "Bingo"
-];
-
-const games = [
-  { name: "Game 1", img: game1 },
-  { name: "Game 2", img: game2 },
-  { name: "Game 3", img: game3 },
-  { name: "Game 4", img: game4 },
-  { name: "Game 5", img: game5 },
 ];
 
 const sliderImages = [slider1, slider2, slider2, slider1];
@@ -38,9 +25,17 @@ const slides = getSlides(sliderImages, 2);
 
 const AUTO_SLIDE_INTERVAL = 2500;
 
+const isLoggedIn = () => {
+  return !!localStorage.getItem('authToken');
+};
+
 const GameList = () => {
   const [current, setCurrent] = useState(0);
   const timeoutRef = useRef(null);
+  const [games, setGames] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [hoveredIdx, setHoveredIdx] = useState(null);
 
   const nextSlide = () => setCurrent((prev) => (prev + 1) % slides.length);
   const prevSlide = () => setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
@@ -49,6 +44,40 @@ const GameList = () => {
     timeoutRef.current = setInterval(nextSlide, AUTO_SLIDE_INTERVAL);
     return () => clearInterval(timeoutRef.current);
   }, [current]);
+
+  useEffect(() => {
+    setLoading(true);
+    fetch(`${import.meta.env.VITE_API_BASE_URL}/games`)
+      .then(res => res.json())
+      .then(data => {
+        setGames(data.games || []);
+        setLoading(false);
+      })
+      .catch(err => {
+        setError("Failed to load games");
+        setLoading(false);
+      });
+  }, []);
+
+  const handleLaunch = async (gameId, mode) => {
+    if (mode === 'real' && !isLoggedIn()) {
+      alert('You must be logged in to play for real. Please log in or sign up.');
+      return;
+    }
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/games/launch`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ gameId, mode }),
+      });
+      const data = await res.json();
+      if (data.url) window.open(data.url, "_blank");
+      else alert(data.error || "Failed to launch game");
+    } catch (err) {
+      alert("Failed to launch game");
+    }
+  };
 
   return (
     <main className="flex-1 p-4 bg-black min-h-screen">
@@ -119,18 +148,68 @@ const GameList = () => {
           </button>
         ))}
       </div>
-      {gameSections.map((section) => (
+      {loading ? (
+        <div className="text-white text-center py-10">Loading games...</div>
+      ) : error ? (
+        <div className="text-red-400 text-center py-10">{error}</div>
+      ) : gameSections.map((section) => (
         <div className="mb-10" key={section}>
           <div className="flex justify-between items-center mb-3">
             <h5 className="text-white text-lg font-semibold">{section}</h5>
             <button className="text-pink-400 font-bold text-sm hover:underline">See All</button>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            {games.map((game, idx) => (
-              <div key={idx} className="bg-gray-900 rounded-lg overflow-hidden shadow hover:shadow-pink-400/30 transition">
-                <img src={game.img} alt={game.name} className="w-full h-32 object-cover rounded-t-lg" />
-              </div>
-            ))}
+            {games.map((game, idx) => {
+              const imageSrc =
+                game.thumbnail_url ||
+                game.more_details?.media?.icon ||
+                game.more_details?.media?.thumbnails?.["250x180"] ||
+                game.more_details?.media?.thumbnails?.["500x360"] ||
+                "";
+              return (
+                <div
+                  key={idx}
+                  className="bg-gray-900 rounded-lg overflow-hidden shadow hover:shadow-pink-400/30 transition relative flex flex-col items-center group"
+                  onMouseEnter={() => setHoveredIdx(idx)}
+                  onMouseLeave={() => setHoveredIdx(null)}
+                >
+                  <img
+                    src={imageSrc}
+                    alt={game.name}
+                    className="w-full h-32 object-cover rounded-t-lg"
+                  />
+                  <div className="p-2 text-white text-center font-semibold">{game.name}</div>
+                  {hoveredIdx === idx && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/40 transition-opacity group-hover:opacity-100 opacity-100 gap-4">
+                      <button
+                        className="flex flex-col items-center group/play"
+                        title="Fun Play"
+                        onClick={e => {
+                          e.stopPropagation();
+                          handleLaunch(game.casino_game_id, 'fun');
+                        }}
+                      >
+                        <FaRegSmile className="text-white text-3xl mb-1 group-hover/play:text-yellow-300" />
+                        <span className="text-xs text-white">Demo</span>
+                      </button>
+                      <button
+                        className="flex flex-col items-center group/play"
+                        title={isLoggedIn() ? "Real Play" : "Login required"}
+                        disabled={!isLoggedIn()}
+                        style={{ opacity: isLoggedIn() ? 1 : 0.5, cursor: isLoggedIn() ? 'pointer' : 'not-allowed' }}
+                        onClick={e => {
+                          e.stopPropagation();
+                          handleLaunch(game.casino_game_id, 'real');
+                        }}
+                      >
+                        <FaPlay className="text-white text-3xl mb-1 group-hover/play:text-green-400" />
+                        <span className="text-xs text-white">Real</span>
+                      </button>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
       ))}

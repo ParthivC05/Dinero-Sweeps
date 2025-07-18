@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 18,
+            "activePatchIndex": 27,
             "patches": [
                 {
                     "date": 1752728229743,
@@ -80,6 +80,42 @@
                 {
                     "date": 1752817532078,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -24,11 +24,29 @@\n   'http://localhost:5173',\r\n   'https://dinero-sweeps.vercel.app'\r\n ];\r\n \r\n+// CORS origin function for both Express and Socket.IO\r\n+const corsOriginFunction = function (origin, callback) {\r\n+  // allow requests with no origin (like mobile apps, curl, etc.)\r\n+  if (!origin) return callback(null, true);\r\n+  if (allowedOrigins.includes(origin)) {\r\n+    return callback(null, true);\r\n+  } else {\r\n+    return callback(new Error('Not allowed by CORS'));\r\n+  }\r\n+};\r\n+\r\n+// Express CORS\r\n+app.use(cors({\r\n+  origin: corsOriginFunction,\r\n+  credentials: true,\r\n+}));\r\n+\r\n+// Socket.IO CORS\r\n const io = new SocketIOServer(server, {\r\n   cors: {\r\n-    origin: allowedOrigins,\r\n+    origin: corsOriginFunction,\r\n     credentials: true,\r\n   },\r\n });\r\n const PORT = process.env.PORT || 8004;\r\n@@ -44,22 +62,8 @@\n .catch((err) => {\r\n   console.error('❌ MongoDB connection error:', err.message);\r\n });\r\n \r\n-// CORS for frontend\r\n-app.use(cors({\r\n-  origin: function (origin, callback) {\r\n-    // allow requests with no origin (like mobile apps, curl, etc.)\r\n-    if (!origin) return callback(null, true);\r\n-    if (allowedOrigins.includes(origin)) {\r\n-      return callback(null, true);\r\n-    } else {\r\n-      return callback(new Error('Not allowed by CORS'));\r\n-    }\r\n-  },\r\n-  credentials: true,\r\n-}));\r\n-\r\n app.use(express.json());\r\n app.use(express.urlencoded({ extended: true }));\r\n \r\n // Session (for OAuth) - Using MongoDB store for production\r\n"
+                },
+                {
+                    "date": 1752835370888,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -11,8 +11,9 @@\n import passportConfig from './config/passport.js';\r\n import http from 'http';\r\n import { Server as SocketIOServer } from 'socket.io';\r\n import 'dotenv/config';\r\n+import mysql from 'mysql2/promise';\r\n \r\n const app = express();\r\n const server = http.createServer(app);\r\n \r\n@@ -62,8 +63,16 @@\n .catch((err) => {\r\n   console.error('❌ MongoDB connection error:', err.message);\r\n });\r\n \r\n+// SQL Database connection\r\n+export const sqlDb = mysql.createPool({\r\n+  host: process.env.SQL_HOST,\r\n+  user: process.env.SQL_USER,\r\n+  password: process.env.SQL_PASSWORD,\r\n+  database: process.env.SQL_DATABASE,\r\n+});\r\n+\r\n app.use(express.json());\r\n app.use(express.urlencoded({ extended: true }));\r\n \r\n // Session (for OAuth) - Using MongoDB store for production\r\n"
+                },
+                {
+                    "date": 1752836257025,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -12,8 +12,9 @@\n import http from 'http';\r\n import { Server as SocketIOServer } from 'socket.io';\r\n import 'dotenv/config';\r\n import mysql from 'mysql2/promise';\r\n+import gamesRouter from './routes/games.js';\r\n \r\n const app = express();\r\n const server = http.createServer(app);\r\n \r\n@@ -98,8 +99,9 @@\n app.use(passport.session());\r\n \r\n // Routes\r\n app.use('/api/v1/auth', authRoutes);\r\n+app.use('/api/v1/games', gamesRouter);\r\n \r\n // --- Live Chat Logic ---\r\n const offensiveWords = ['badword1', 'badword2']; // Add your list\r\n function isOffensive(text) {\r\n"
+                },
+                {
+                    "date": 1752836693067,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -72,8 +72,18 @@\n   password: process.env.SQL_PASSWORD,\r\n   database: process.env.SQL_DATABASE,\r\n });\r\n \r\n+// Test SQL connection on startup\r\n+sqlDb.getConnection()\r\n+  .then(conn => {\r\n+    console.log('✅ SQL database connected successfully');\r\n+    conn.release();\r\n+  })\r\n+  .catch(err => {\r\n+    console.error('❌ SQL database connection error:', err.message);\r\n+  });\r\n+\r\n app.use(express.json());\r\n app.use(express.urlencoded({ extended: true }));\r\n \r\n // Session (for OAuth) - Using MongoDB store for production\r\n"
+                },
+                {
+                    "date": 1752836753456,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -79,9 +79,9 @@\n     console.log('✅ SQL database connected successfully');\r\n     conn.release();\r\n   })\r\n   .catch(err => {\r\n-    console.error('❌ SQL database connection error:', err.message);\r\n+    console.error('❌ SQL database connection error:', err);\r\n   });\r\n \r\n app.use(express.json());\r\n app.use(express.urlencoded({ extended: true }));\r\n"
+                },
+                {
+                    "date": 1752837328338,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -11,9 +11,10 @@\n import passportConfig from './config/passport.js';\r\n import http from 'http';\r\n import { Server as SocketIOServer } from 'socket.io';\r\n import 'dotenv/config';\r\n-import mysql from 'mysql2/promise';\r\n+import pkg from 'pg';\r\n+const { Pool } = pkg;\r\n import gamesRouter from './routes/games.js';\r\n \r\n const app = express();\r\n const server = http.createServer(app);\r\n@@ -65,20 +66,20 @@\n   console.error('❌ MongoDB connection error:', err.message);\r\n });\r\n \r\n // SQL Database connection\r\n-export const sqlDb = mysql.createPool({\r\n+export const sqlDb = new Pool({\r\n   host: process.env.SQL_HOST,\r\n   user: process.env.SQL_USER,\r\n   password: process.env.SQL_PASSWORD,\r\n   database: process.env.SQL_DATABASE,\r\n+  port: process.env.SQL_PORT || 5432,\r\n });\r\n \r\n // Test SQL connection on startup\r\n-sqlDb.getConnection()\r\n-  .then(conn => {\r\n+sqlDb.connect()\r\n+  .then(() => {\r\n     console.log('✅ SQL database connected successfully');\r\n-    conn.release();\r\n   })\r\n   .catch(err => {\r\n     console.error('❌ SQL database connection error:', err);\r\n   });\r\n"
+                },
+                {
+                    "date": 1752842572969,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -74,9 +74,9 @@\n   database: process.env.SQL_DATABASE,\r\n   port: process.env.SQL_PORT || 5432,\r\n });\r\n \r\n-// Test SQL connection on startup\r\n+// Test SQL connection on startup   \r\n sqlDb.connect()\r\n   .then(() => {\r\n     console.log('✅ SQL database connected successfully');\r\n   })\r\n"
+                },
+                {
+                    "date": 1752842578279,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -65,18 +65,16 @@\n .catch((err) => {\r\n   console.error('❌ MongoDB connection error:', err.message);\r\n });\r\n \r\n-// SQL Database connection\r\n export const sqlDb = new Pool({\r\n   host: process.env.SQL_HOST,\r\n   user: process.env.SQL_USER,\r\n   password: process.env.SQL_PASSWORD,\r\n   database: process.env.SQL_DATABASE,\r\n   port: process.env.SQL_PORT || 5432,\r\n });\r\n \r\n-// Test SQL connection on startup   \r\n sqlDb.connect()\r\n   .then(() => {\r\n     console.log('✅ SQL database connected successfully');\r\n   })\r\n"
+                },
+                {
+                    "date": 1752842583664,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -84,9 +84,8 @@\n \r\n app.use(express.json());\r\n app.use(express.urlencoded({ extended: true }));\r\n \r\n-// Session (for OAuth) - Using MongoDB store for production\r\n app.use(session({\r\n   secret: process.env.SESSION_SECRET || 'secret',\r\n   resave: false,\r\n   saveUninitialized: false,\r\n@@ -101,19 +100,16 @@\n     maxAge: 24 * 60 * 60 * 1000, // 1 day\r\n   },\r\n }));\r\n \r\n-// Passport\r\n passportConfig(passport);\r\n app.use(passport.initialize());\r\n app.use(passport.session());\r\n \r\n-// Routes\r\n app.use('/api/v1/auth', authRoutes);\r\n app.use('/api/v1/games', gamesRouter);\r\n \r\n-// --- Live Chat Logic ---\r\n-const offensiveWords = ['badword1', 'badword2']; // Add your list\r\n+const offensiveWords = ['badword1', 'badword2']; \r\n function isOffensive(text) {\r\n   return offensiveWords.some(word => text.toLowerCase().includes(word));\r\n }\r\n let messages = [];\r\n"
+                },
+                {
+                    "date": 1752842589348,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -18,20 +18,17 @@\n \r\n const app = express();\r\n const server = http.createServer(app);\r\n \r\n-// Production security middleware\r\n app.use(helmet());\r\n app.use(compression());\r\n \r\n const allowedOrigins = [\r\n   'http://localhost:5173',\r\n   'https://dinero-sweeps.vercel.app'\r\n ];\r\n \r\n-// CORS origin function for both Express and Socket.IO\r\n const corsOriginFunction = function (origin, callback) {\r\n-  // allow requests with no origin (like mobile apps, curl, etc.)\r\n   if (!origin) return callback(null, true);\r\n   if (allowedOrigins.includes(origin)) {\r\n     return callback(null, true);\r\n   } else {\r\n@@ -127,9 +124,8 @@\n     io.emit('receive_message', messageObj);\r\n   });\r\n });\r\n \r\n-// Error handler\r\n app.use((err, req, res, next) => {\r\n   res.status(err.status || 500).json({\r\n     success: false,\r\n     error: err.message || 'Server error',\r\n"
                 }
             ],
             "date": 1752728229743,

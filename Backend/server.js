@@ -12,11 +12,13 @@ import passportConfig from './config/passport.js';
 import http from 'http';
 import { Server as SocketIOServer } from 'socket.io';
 import 'dotenv/config';
+import pkg from 'pg';
+const { Pool } = pkg;
+import gamesRouter from './routes/games.js';
 
 const app = express();
 const server = http.createServer(app);
 
-// Production security middleware
 app.use(helmet());
 app.use(compression());
 
@@ -25,9 +27,7 @@ const allowedOrigins = [
   'https://dinero-sweeps.vercel.app'
 ];
 
-// CORS origin function for both Express and Socket.IO
 const corsOriginFunction = function (origin, callback) {
-  // allow requests with no origin (like mobile apps, curl, etc.)
   if (!origin) return callback(null, true);
   if (allowedOrigins.includes(origin)) {
     return callback(null, true);
@@ -36,13 +36,11 @@ const corsOriginFunction = function (origin, callback) {
   }
 };
 
-// Express CORS
 app.use(cors({
   origin: corsOriginFunction,
   credentials: true,
 }));
 
-// Socket.IO CORS
 const io = new SocketIOServer(server, {
   cors: {
     origin: corsOriginFunction,
@@ -51,7 +49,6 @@ const io = new SocketIOServer(server, {
 });
 const PORT = process.env.PORT || 8004;
 
-// MongoDB connection
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -63,10 +60,25 @@ mongoose.connect(process.env.MONGODB_URI, {
   console.error('❌ MongoDB connection error:', err.message);
 });
 
+export const sqlDb = new Pool({
+  host: process.env.SQL_HOST,
+  user: process.env.SQL_USER,
+  password: process.env.SQL_PASSWORD,
+  database: process.env.SQL_DATABASE,
+  port: process.env.SQL_PORT || 5432,
+});
+
+sqlDb.connect()
+  .then(() => {
+    console.log('✅ SQL database connected successfully');
+  })
+  .catch(err => {
+    console.error('❌ SQL database connection error:', err);
+  });
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Session (for OAuth) - Using MongoDB store for production
 app.use(session({
   secret: process.env.SESSION_SECRET || 'secret',
   resave: false,
@@ -83,16 +95,14 @@ app.use(session({
   },
 }));
 
-// Passport
 passportConfig(passport);
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Routes
 app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/games', gamesRouter);
 
-// --- Live Chat Logic ---
-const offensiveWords = ['badword1', 'badword2']; // Add your list
+const offensiveWords = ['badword1', 'badword2']; 
 function isOffensive(text) {
   return offensiveWords.some(word => text.toLowerCase().includes(word));
 }
@@ -112,7 +122,6 @@ io.on('connection', (socket) => {
   });
 });
 
-// Error handler
 app.use((err, req, res, next) => {
   res.status(err.status || 500).json({
     success: false,
