@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 12,
+            "activePatchIndex": 15,
             "patches": [
                 {
                     "date": 1752835378871,
@@ -56,6 +56,18 @@
                 {
                     "date": 1752842556351,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -19,22 +19,20 @@\n     return ensureAuthenticated(req, res, next);\r\n   }\r\n   next();\r\n }, async (req, res) => {\r\n-  const { gameId, mode } = req.body; // mode: 'real' or 'fun'\r\n-  const userId = req.user?.id; // Only present if logged in\r\n+  const { gameId, mode } = req.body; \r\n+  const userId = req.user?.id; \r\n \r\n   const { rows } = await sqlDb.query('SELECT * FROM casino_games WHERE casino_game_id = $1', [gameId]);\r\n   const game = rows[0];\r\n   if (!game) return res.status(404).json({ error: 'Game not found' });\r\n \r\n   let launchUrl;\r\n   try {\r\n     if (mode === 'real') {\r\n-      // 2. Create real session with provider\r\n       launchUrl = await provider.createRealSession({ userId, game });\r\n     } else {\r\n-      // 3. Get demo URL or create demo session\r\n       const moreDetails = game.more_details || {};\r\n       launchUrl = moreDetails.demo_url || (await provider.createDemoSession({ game }));\r\n     }\r\n     res.json({ url: launchUrl });\r\n"
+                },
+                {
+                    "date": 1752843301144,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -32,9 +32,9 @@\n     if (mode === 'real') {\r\n       launchUrl = await provider.createRealSession({ userId, game });\r\n     } else {\r\n       const moreDetails = game.more_details || {};\r\n-      launchUrl = moreDetails.demo_url || (await provider.createDemoSession({ game }));\r\n+      launchUrl = moreDetails.demo_url ;\r\n     }\r\n     res.json({ url: launchUrl });\r\n   } catch (err) {\r\n     res.status(500).json({ error: 'Failed to launch game' });\r\n"
+                },
+                {
+                    "date": 1752843405835,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,6 @@\n import express from 'express';\r\n import { sqlDb } from '../server.js';\r\n-import provider from '../services/provider.js'; \r\n-import ensureAuthenticated from '../middleware/ensureAuthenticated.js';\r\n \r\n const router = express.Router();\r\n \r\n router.get('/', async (req, res) => {\r\n@@ -13,32 +11,18 @@\n     res.status(500).json({ success: false, error: err.message });\r\n   }\r\n });\r\n \r\n-router.post('/launch', (req, res, next) => {\r\n-  if (req.body.mode === 'real') {\r\n-    return ensureAuthenticated(req, res, next);\r\n-  }\r\n-  next();\r\n-}, async (req, res) => {\r\n-  const { gameId, mode } = req.body; \r\n-  const userId = req.user?.id; \r\n-\r\n+// Only support demo (fun) play for now\r\n+router.post('/launch', async (req, res) => {\r\n+  const { gameId } = req.body;\r\n   const { rows } = await sqlDb.query('SELECT * FROM casino_games WHERE casino_game_id = $1', [gameId]);\r\n   const game = rows[0];\r\n   if (!game) return res.status(404).json({ error: 'Game not found' });\r\n \r\n-  let launchUrl;\r\n-  try {\r\n-    if (mode === 'real') {\r\n-      launchUrl = await provider.createRealSession({ userId, game });\r\n-    } else {\r\n-      const moreDetails = game.more_details || {};\r\n-      launchUrl = moreDetails.demo_url ;\r\n-    }\r\n-    res.json({ url: launchUrl });\r\n-  } catch (err) {\r\n-    res.status(500).json({ error: 'Failed to launch game' });\r\n-  }\r\n+  const moreDetails = game.more_details || {};\r\n+  const launchUrl = moreDetails.demo_url;\r\n+  if (!launchUrl) return res.status(404).json({ error: 'Demo URL not found' });\r\n+  res.json({ url: launchUrl });\r\n });\r\n \r\n export default router; \n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1752843444421,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -11,9 +11,8 @@\n     res.status(500).json({ success: false, error: err.message });\r\n   }\r\n });\r\n \r\n-// Only support demo (fun) play for now\r\n router.post('/launch', async (req, res) => {\r\n   const { gameId } = req.body;\r\n   const { rows } = await sqlDb.query('SELECT * FROM casino_games WHERE casino_game_id = $1', [gameId]);\r\n   const game = rows[0];\r\n"
                 }
             ],
             "date": 1752835378871,

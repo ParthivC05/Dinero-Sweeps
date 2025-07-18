@@ -1,7 +1,5 @@
 import express from 'express';
 import { sqlDb } from '../server.js';
-import provider from '../services/provider.js'; 
-import ensureAuthenticated from '../middleware/ensureAuthenticated.js';
 
 const router = express.Router();
 
@@ -14,31 +12,16 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.post('/launch', (req, res, next) => {
-  if (req.body.mode === 'real') {
-    return ensureAuthenticated(req, res, next);
-  }
-  next();
-}, async (req, res) => {
-  const { gameId, mode } = req.body; 
-  const userId = req.user?.id; 
-
+router.post('/launch', async (req, res) => {
+  const { gameId } = req.body;
   const { rows } = await sqlDb.query('SELECT * FROM casino_games WHERE casino_game_id = $1', [gameId]);
   const game = rows[0];
   if (!game) return res.status(404).json({ error: 'Game not found' });
 
-  let launchUrl;
-  try {
-    if (mode === 'real') {
-      launchUrl = await provider.createRealSession({ userId, game });
-    } else {
-      const moreDetails = game.more_details || {};
-      launchUrl = moreDetails.demo_url || (await provider.createDemoSession({ game }));
-    }
-    res.json({ url: launchUrl });
-  } catch (err) {
-    res.status(500).json({ error: 'Failed to launch game' });
-  }
+  const moreDetails = game.more_details || {};
+  const launchUrl = moreDetails.demo_url;
+  if (!launchUrl) return res.status(404).json({ error: 'Demo URL not found' });
+  res.json({ url: launchUrl });
 });
 
 export default router; 
