@@ -43,6 +43,15 @@ const Chat = () => {
   }, []);
 
   useEffect(() => {
+    socket.on('connect', () => {
+      console.log('Socket connected:', socket.id);
+    });
+    return () => {
+      socket.off('connect');
+    };
+  }, []);
+
+  useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 

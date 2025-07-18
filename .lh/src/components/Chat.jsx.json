@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 17,
+            "activePatchIndex": 18,
             "patches": [
                 {
                     "date": 1752752145565,
@@ -76,6 +76,10 @@
                 {
                     "date": 1752819661864,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,8 @@\n import React, { useEffect, useRef, useState } from 'react';\r\n import { io } from 'socket.io-client';\r\n \r\n-const socket = io(import.meta.env.VITE_API_BASE_URL); \r\n+const socket = io(import.meta.env.VITE_SOCKET_URL); \r\n \r\n const LOCAL_STORAGE_KEY = 'chat_messages';\r\n \r\n const Chat = () => {\r\n"
+                },
+                {
+                    "date": 1752821192236,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -42,8 +42,17 @@\n     };\r\n   }, []);\r\n \r\n   useEffect(() => {\r\n+    socket.on('connect', () => {\r\n+      console.log('Socket connected:', socket.id);\r\n+    });\r\n+    return () => {\r\n+      socket.off('connect');\r\n+    };\r\n+  }, []);\r\n+\r\n+  useEffect(() => {\r\n     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });\r\n   }, [messages]);\r\n \r\n   const sendMessage = (e) => {\r\n"
                 }
             ],
             "date": 1752752145565,
