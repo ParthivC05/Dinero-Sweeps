@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 4,
+            "activePatchIndex": 9,
             "patches": [
                 {
                     "date": 1752728229743,
@@ -24,6 +24,26 @@
                 {
                     "date": 1752752111670,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,12 +5,21 @@\n import session from 'express-session';\r\n import mongoose from 'mongoose';\r\n import authRoutes from './routes/auth.js';\r\n import passportConfig from './config/passport.js';\r\n+import http from 'http';\r\n+import { Server as SocketIOServer } from 'socket.io';\r\n \r\n dotenv.config();\r\n \r\n const app = express();\r\n+const server = http.createServer(app);\r\n+const io = new SocketIOServer(server, {\r\n+  cors: {\r\n+    origin: process.env.FRONTEND_URL || 'http://localhost:5173',\r\n+    credentials: true,\r\n+  },\r\n+});\r\n const PORT = process.env.PORT || 8004;\r\n \r\n // MongoDB connection\r\n mongoose.connect(process.env.MONGODB_URI, {\r\n@@ -41,15 +50,36 @@\n \r\n // Routes\r\n app.use('/api/v1/auth', authRoutes);\r\n \r\n+// --- Live Chat Logic ---\r\n+const offensiveWords = ['badword1', 'badword2']; // Add your list\r\n+function isOffensive(text) {\r\n+  return offensiveWords.some(word => text.toLowerCase().includes(word));\r\n+}\r\n+let messages = [];\r\n+\r\n+io.on('connection', (socket) => {\r\n+  socket.emit('chat_history', messages);\r\n+  socket.on('send_message', (msg) => {\r\n+    let messageObj;\r\n+    if (isOffensive(msg.text)) {\r\n+      messageObj = { ...msg, text: 'Deleted because of offensive content', offensive: true };\r\n+    } else {\r\n+      messageObj = { ...msg, offensive: false };\r\n+    }\r\n+    messages.push(messageObj);\r\n+    io.emit('receive_message', messageObj);\r\n+  });\r\n+});\r\n+\r\n // Error handler\r\n app.use((err, req, res, next) => {\r\n   res.status(err.status || 500).json({\r\n     success: false,\r\n     error: err.message || 'Server error',\r\n   });\r\n });\r\n \r\n-app.listen(PORT, () => {\r\n-  console.log(`Auth server running on http://localhost:${PORT}`);\r\n+server.listen(PORT, () => {\r\n+  console.log(`Server running on http://localhost:${PORT}`);\r\n }); \n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1752812943368,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -8,9 +8,9 @@\n import passportConfig from './config/passport.js';\r\n import http from 'http';\r\n import { Server as SocketIOServer } from 'socket.io';\r\n \r\n-dotenv.config();\r\n+require('dotenv').config();\r\n \r\n const app = express();\r\n const server = http.createServer(app);\r\n const io = new SocketIOServer(server, {\r\n"
+                },
+                {
+                    "date": 1752812994939,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -8,9 +8,9 @@\n import passportConfig from './config/passport.js';\r\n import http from 'http';\r\n import { Server as SocketIOServer } from 'socket.io';\r\n \r\n-require('dotenv').config();\r\n+require('dotenv').config(); \r\n \r\n const app = express();\r\n const server = http.createServer(app);\r\n const io = new SocketIOServer(server, {\r\n"
+                },
+                {
+                    "date": 1752813000204,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -8,9 +8,9 @@\n import passportConfig from './config/passport.js';\r\n import http from 'http';\r\n import { Server as SocketIOServer } from 'socket.io';\r\n \r\n-require('dotenv').config(); \r\n+require('dotenv').config();\r\n \r\n const app = express();\r\n const server = http.createServer(app);\r\n const io = new SocketIOServer(server, {\r\n"
+                },
+                {
+                    "date": 1752813034955,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -7,11 +7,10 @@\n import authRoutes from './routes/auth.js';\r\n import passportConfig from './config/passport.js';\r\n import http from 'http';\r\n import { Server as SocketIOServer } from 'socket.io';\r\n+import 'dotenv/config';\r\n \r\n-require('dotenv').config();\r\n-\r\n const app = express();\r\n const server = http.createServer(app);\r\n const io = new SocketIOServer(server, {\r\n   cors: {\r\n"
+                },
+                {
+                    "date": 1752813418689,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -23,8 +23,14 @@\n // MongoDB connection\r\n mongoose.connect(process.env.MONGODB_URI, {\r\n   useNewUrlParser: true,\r\n   useUnifiedTopology: true,\r\n+})\r\n+.then(() => {\r\n+  console.log('✅ MongoDB connected successfully');\r\n+})\r\n+.catch((err) => {\r\n+  console.error('❌ MongoDB connection error:', err.message);\r\n });\r\n \r\n // CORS for frontend\r\n app.use(cors({\r\n"
                 }
             ],
             "date": 1752728229743,

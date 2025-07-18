@@ -8,8 +8,7 @@ import authRoutes from './routes/auth.js';
 import passportConfig from './config/passport.js';
 import http from 'http';
 import { Server as SocketIOServer } from 'socket.io';
-
-dotenv.config();
+import 'dotenv/config';
 
 const app = express();
 const server = http.createServer(app);
@@ -25,6 +24,12 @@ const PORT = process.env.PORT || 8004;
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+})
+.then(() => {
+  console.log('✅ MongoDB connected successfully');
+})
+.catch((err) => {
+  console.error('❌ MongoDB connection error:', err.message);
 });
 
 // CORS for frontend
@@ -81,5 +86,6 @@ app.use((err, req, res, next) => {
 });
 
 server.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`🚀 Server running on http://localhost:${PORT}`);
+  console.log(`📡 Socket.IO server ready`);
 }); 
