@@ -49,7 +49,7 @@ const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
-  const calculateAge = (year, month, day) => {
+  const calculateAge = (year, month, day) => {  
     if (!year || !month || !day) return 0;
     const monthIndex = months.indexOf(month);
     const dob = new Date(year, monthIndex, day);
