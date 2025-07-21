@@ -1,0 +1,22 @@
+{
+    "sourceFile": "backend/routes/users.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1753094285904,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1753100624588,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,17 +1,17 @@\n import express from 'express';\r\n import multer from 'multer';\r\n import { getProfile, updateProfile, uploadAvatar, uploadVerificationDoc, setSelfExclusion, changePassword } from '../controllers/userController.js';\r\n-import { isAuthenticated } from '../middleware/auth.js';\r\n+import jwtAuth from '../middleware/jwtAuth.js';\r\n \r\n const router = express.Router();\r\n const upload = multer({ dest: 'uploads/avatars/' });\r\n const docUpload = multer({ dest: 'uploads/verification/' });\r\n \r\n-router.get('/me', isAuthenticated, getProfile);\r\n-router.patch('/me', isAuthenticated, updateProfile);\r\n-router.post('/me/avatar', isAuthenticated, upload.single('avatar'), uploadAvatar);\r\n-router.post('/me/verify', isAuthenticated, docUpload.single('document'), uploadVerificationDoc);\r\n-router.post('/me/self-exclusion', isAuthenticated, setSelfExclusion);\r\n-router.post('/me/change-password', isAuthenticated, changePassword);\r\n+router.get('/me', jwtAuth, getProfile);\r\n+router.patch('/me', jwtAuth, updateProfile);\r\n+router.post('/me/avatar', jwtAuth, upload.single('avatar'), uploadAvatar);\r\n+router.post('/me/verify', jwtAuth, docUpload.single('document'), uploadVerificationDoc);\r\n+router.post('/me/self-exclusion', jwtAuth, setSelfExclusion);\r\n+router.post('/me/change-password', jwtAuth, changePassword);\r\n \r\n export default router; \n\\ No newline at end of file\n"
+                }
+            ],
+            "date": 1753094285904,
+            "name": "Commit-0",
+            "content": "import express from 'express';\r\nimport multer from 'multer';\r\nimport { getProfile, updateProfile, uploadAvatar, uploadVerificationDoc, setSelfExclusion, changePassword } from '../controllers/userController.js';\r\nimport { isAuthenticated } from '../middleware/auth.js';\r\n\r\nconst router = express.Router();\r\nconst upload = multer({ dest: 'uploads/avatars/' });\r\nconst docUpload = multer({ dest: 'uploads/verification/' });\r\n\r\nrouter.get('/me', isAuthenticated, getProfile);\r\nrouter.patch('/me', isAuthenticated, updateProfile);\r\nrouter.post('/me/avatar', isAuthenticated, upload.single('avatar'), uploadAvatar);\r\nrouter.post('/me/verify', isAuthenticated, docUpload.single('document'), uploadVerificationDoc);\r\nrouter.post('/me/self-exclusion', isAuthenticated, setSelfExclusion);\r\nrouter.post('/me/change-password', isAuthenticated, changePassword);\r\n\r\nexport default router; "
+        }
+    ]
+}

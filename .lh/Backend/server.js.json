@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 27,
+            "activePatchIndex": 31,
             "patches": [
                 {
                     "date": 1752728229743,
@@ -116,6 +116,22 @@
                 {
                     "date": 1752842589348,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -18,20 +18,17 @@\n \r\n const app = express();\r\n const server = http.createServer(app);\r\n \r\n-// Production security middleware\r\n app.use(helmet());\r\n app.use(compression());\r\n \r\n const allowedOrigins = [\r\n   'http://localhost:5173',\r\n   'https://dinero-sweeps.vercel.app'\r\n ];\r\n \r\n-// CORS origin function for both Express and Socket.IO\r\n const corsOriginFunction = function (origin, callback) {\r\n-  // allow requests with no origin (like mobile apps, curl, etc.)\r\n   if (!origin) return callback(null, true);\r\n   if (allowedOrigins.includes(origin)) {\r\n     return callback(null, true);\r\n   } else {\r\n@@ -127,9 +124,8 @@\n     io.emit('receive_message', messageObj);\r\n   });\r\n });\r\n \r\n-// Error handler\r\n app.use((err, req, res, next) => {\r\n   res.status(err.status || 500).json({\r\n     success: false,\r\n     error: err.message || 'Server error',\r\n"
+                },
+                {
+                    "date": 1753076764432,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -35,24 +35,21 @@\n     return callback(new Error('Not allowed by CORS'));\r\n   }\r\n };\r\n \r\n-// Express CORS\r\n app.use(cors({\r\n   origin: corsOriginFunction,\r\n   credentials: true,\r\n }));\r\n \r\n-// Socket.IO CORS\r\n const io = new SocketIOServer(server, {\r\n   cors: {\r\n     origin: corsOriginFunction,\r\n     credentials: true,\r\n   },\r\n });\r\n const PORT = process.env.PORT || 8004;\r\n \r\n-// MongoDB connection\r\n mongoose.connect(process.env.MONGODB_URI, {\r\n   useNewUrlParser: true,\r\n   useUnifiedTopology: true,\r\n })\r\n@@ -62,24 +59,8 @@\n .catch((err) => {\r\n   console.error('❌ MongoDB connection error:', err.message);\r\n });\r\n \r\n-export const sqlDb = new Pool({\r\n-  host: process.env.SQL_HOST,\r\n-  user: process.env.SQL_USER,\r\n-  password: process.env.SQL_PASSWORD,\r\n-  database: process.env.SQL_DATABASE,\r\n-  port: process.env.SQL_PORT || 5432,\r\n-});\r\n-\r\n-sqlDb.connect()\r\n-  .then(() => {\r\n-    console.log('✅ SQL database connected successfully');\r\n-  })\r\n-  .catch(err => {\r\n-    console.error('❌ SQL database connection error:', err);\r\n-  });\r\n-\r\n app.use(express.json());\r\n app.use(express.urlencoded({ extended: true }));\r\n \r\n app.use(session({\r\n"
+                },
+                {
+                    "date": 1753077133623,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -11,9 +11,8 @@\n import passportConfig from './config/passport.js';\r\n import http from 'http';\r\n import { Server as SocketIOServer } from 'socket.io';\r\n import 'dotenv/config';\r\n-import pkg from 'pg';\r\n const { Pool } = pkg;\r\n import gamesRouter from './routes/games.js';\r\n \r\n const app = express();\r\n"
+                },
+                {
+                    "date": 1753077160210,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -11,9 +11,9 @@\n import passportConfig from './config/passport.js';\r\n import http from 'http';\r\n import { Server as SocketIOServer } from 'socket.io';\r\n import 'dotenv/config';\r\n-const { Pool } = pkg;\r\n+\r\n import gamesRouter from './routes/games.js';\r\n \r\n const app = express();\r\n const server = http.createServer(app);\r\n"
+                },
+                {
+                    "date": 1753094328957,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -13,8 +13,9 @@\n import { Server as SocketIOServer } from 'socket.io';\r\n import 'dotenv/config';\r\n \r\n import gamesRouter from './routes/games.js';\r\n+import usersRouter from './routes/users.js';\r\n \r\n const app = express();\r\n const server = http.createServer(app);\r\n \r\n@@ -83,8 +84,9 @@\n app.use(passport.session());\r\n \r\n app.use('/api/v1/auth', authRoutes);\r\n app.use('/api/v1/games', gamesRouter);\r\n+app.use('/api/v1/users', usersRouter);\r\n \r\n const offensiveWords = ['badword1', 'badword2']; \r\n function isOffensive(text) {\r\n   return offensiveWords.some(word => text.toLowerCase().includes(word));\r\n"
                 }
             ],
             "date": 1752728229743,

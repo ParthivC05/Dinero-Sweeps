@@ -1,0 +1,18 @@
+{
+    "sourceFile": "backend/models/CasinoGame.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1753077397668,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1753077397668,
+            "name": "Commit-0",
+            "content": "import mongoose from 'mongoose';\r\n\r\nconst CasinoGameSchema = new mongoose.Schema({\r\n  id: Number,\r\n  name: String,\r\n  casino_game_id: String,\r\n  casino_category_id: Number,\r\n  casino_provider_id: Number,\r\n  thumbnail_url: String,\r\n  mobile_thumbnail_url: String,\r\n  is_active: Boolean,\r\n  is_featured: Boolean,\r\n  description: String,\r\n  has_freespins: Boolean,\r\n  restrictions: mongoose.Schema.Types.Mixed,\r\n  devices: mongoose.Schema.Types.Mixed,\r\n  return_to_player: mongoose.Schema.Types.Mixed,\r\n  wagering_contribution: Number,\r\n  more_details: mongoose.Schema.Types.Mixed\r\n});\r\n\r\nexport default mongoose.model('CasinoGame', CasinoGameSchema, 'casino_games'); "
+        }
+    ]
+}

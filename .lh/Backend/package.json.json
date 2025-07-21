@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 3,
+            "activePatchIndex": 4,
             "patches": [
                 {
                     "date": 1752728194493,
@@ -20,6 +20,10 @@
                 {
                     "date": 1752835361382,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -33,9 +33,10 @@\n     \"passport-facebook\": \"^3.0.0\",\r\n     \"passport-google-oauth20\": \"^2.0.0\",\r\n     \"uuid\": \"^9.0.1\",\r\n     \"winston\": \"^3.11.0\",\r\n-    \"socket.io\": \"^4.7.5\"\r\n+    \"socket.io\": \"^4.7.5\",\r\n+    \"mysql2\": \"^3.9.7\"\r\n   },\r\n   \"devDependencies\": {\r\n     \"jest\": \"^29.7.0\",\r\n     \"nodemon\": \"^3.0.2\",\r\n"
+                },
+                {
+                    "date": 1753076780027,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -31,12 +31,11 @@\n     \"nodemailer\": \"^6.9.7\",\r\n     \"passport\": \"^0.7.0\",\r\n     \"passport-facebook\": \"^3.0.0\",\r\n     \"passport-google-oauth20\": \"^2.0.0\",\r\n+    \"socket.io\": \"^4.7.5\",\r\n     \"uuid\": \"^9.0.1\",\r\n-    \"winston\": \"^3.11.0\",\r\n-    \"socket.io\": \"^4.7.5\",\r\n-    \"mysql2\": \"^3.9.7\"\r\n+    \"winston\": \"^3.11.0\"\r\n   },\r\n   \"devDependencies\": {\r\n     \"jest\": \"^29.7.0\",\r\n     \"nodemon\": \"^3.0.2\",\r\n"
                 }
             ],
             "date": 1752728194493,

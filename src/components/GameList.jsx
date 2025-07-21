@@ -50,7 +50,7 @@ const GameList = () => {
     fetch(`${import.meta.env.VITE_API_BASE_URL}/games`)
       .then(res => res.json())
       .then(data => {
-        setGames(data.games || []);
+        setGames((data.games || []).slice(0, 12));
         setLoading(false);
       })
       .catch(err => {

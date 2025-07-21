@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 32,
+            "activePatchIndex": 33,
             "patches": [
                 {
                     "date": 1752668619196,
@@ -136,6 +136,10 @@
                 {
                     "date": 1752842601711,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -24,9 +24,8 @@\n const slides = getSlides(sliderImages, 2);\r\n \r\n const AUTO_SLIDE_INTERVAL = 2500;\r\n \r\n-// Dummy auth check (replace with your real auth logic)\r\n const isLoggedIn = () => {\r\n   return !!localStorage.getItem('authToken');\r\n };\r\n \r\n"
+                },
+                {
+                    "date": 1753077607224,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -49,9 +49,9 @@\n     setLoading(true);\r\n     fetch(`${import.meta.env.VITE_API_BASE_URL}/games`)\r\n       .then(res => res.json())\r\n       .then(data => {\r\n-        setGames(data.games || []);\r\n+        setGames((data.games || []).slice(0, 12));\r\n         setLoading(false);\r\n       })\r\n       .catch(err => {\r\n         setError(\"Failed to load games\");\r\n@@ -180,9 +180,8 @@\n                   />\r\n                   <div className=\"p-2 text-white text-center font-semibold\">{game.name}</div>\r\n                   {hoveredIdx === idx && (\r\n                     <div className=\"absolute inset-0 flex items-center justify-center bg-black/40 transition-opacity group-hover:opacity-100 opacity-100 gap-4\">\r\n-                      {/* Fun Play (Demo) Icon */}\r\n                       <button\r\n                         className=\"flex flex-col items-center group/play\"\r\n                         title=\"Fun Play\"\r\n                         onClick={e => {\r\n@@ -192,9 +191,8 @@\n                       >\r\n                         <FaRegSmile className=\"text-white text-3xl mb-1 group-hover/play:text-yellow-300\" />\r\n                         <span className=\"text-xs text-white\">Demo</span>\r\n                       </button>\r\n-                      {/* Real Play Icon */}\r\n                       <button\r\n                         className=\"flex flex-col items-center group/play\"\r\n                         title={isLoggedIn() ? \"Real Play\" : \"Login required\"}\r\n                         disabled={!isLoggedIn()}\r\n"
                 }
             ],
             "date": 1752668619196,

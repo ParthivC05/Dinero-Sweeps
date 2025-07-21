@@ -1,0 +1,22 @@
+{
+    "sourceFile": "backend/controllers/userController.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1753094303028,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1753101936371,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,6 +1,5 @@\n import User from '../models/User.js';\r\n-import bcrypt from 'bcryptjs';\r\n import fs from 'fs';\r\n \r\n export const getProfile = async (req, res) => {\r\n   const user = await User.findById(req.user._id).select('-password');\r\n"
+                }
+            ],
+            "date": 1753094303028,
+            "name": "Commit-0",
+            "content": "import User from '../models/User.js';\r\nimport bcrypt from 'bcryptjs';\r\nimport fs from 'fs';\r\n\r\nexport const getProfile = async (req, res) => {\r\n  const user = await User.findById(req.user._id).select('-password');\r\n  res.json(user);\r\n};\r\n\r\nexport const updateProfile = async (req, res) => {\r\n  const updates = req.body;\r\n  delete updates.password;\r\n  const user = await User.findByIdAndUpdate(req.user._id, updates, { new: true, runValidators: true }).select('-password');\r\n  res.json(user);\r\n};\r\n\r\nexport const uploadAvatar = async (req, res) => {\r\n  if (!req.file) return res.status(400).json({ error: 'No file uploaded' });\r\n  const user = await User.findById(req.user._id);\r\n  if (user.avatar) fs.unlink(user.avatar, () => {});\r\n  user.avatar = req.file.path;\r\n  await user.save();\r\n  res.json({ avatar: user.avatar });\r\n};\r\n\r\nexport const uploadVerificationDoc = async (req, res) => {\r\n  if (!req.file || !req.body.type) return res.status(400).json({ error: 'File and type required' });\r\n  const user = await User.findById(req.user._id);\r\n  user.verificationDocs.push({ type: req.body.type, url: req.file.path });\r\n  user.verificationStatus = 'pending';\r\n  await user.save();\r\n  res.json({ verificationDocs: user.verificationDocs });\r\n};\r\n\r\nexport const setSelfExclusion = async (req, res) => {\r\n  const { isActive, reason, startDate, endDate, type } = req.body;\r\n  const user = await User.findById(req.user._id);\r\n  user.selfExclusion = { isActive, reason, startDate, endDate, type };\r\n  await user.save();\r\n  res.json({ selfExclusion: user.selfExclusion });\r\n};\r\n\r\nexport const changePassword = async (req, res) => {\r\n  const { oldPassword, newPassword } = req.body;\r\n  const user = await User.findById(req.user._id);\r\n  if (!await user.comparePassword(oldPassword)) return res.status(400).json({ error: 'Old password incorrect' });\r\n  user.password = newPassword;\r\n  await user.save();\r\n  res.json({ success: true });\r\n}; "
+        }
+    ]
+}

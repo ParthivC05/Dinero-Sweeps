@@ -12,9 +12,9 @@ import passportConfig from './config/passport.js';
 import http from 'http';
 import { Server as SocketIOServer } from 'socket.io';
 import 'dotenv/config';
-import pkg from 'pg';
-const { Pool } = pkg;
+
 import gamesRouter from './routes/games.js';
+import usersRouter from './routes/users.js';
 
 const app = express();
 const server = http.createServer(app);
@@ -60,22 +60,6 @@ mongoose.connect(process.env.MONGODB_URI, {
   console.error('❌ MongoDB connection error:', err.message);
 });
 
-export const sqlDb = new Pool({
-  host: process.env.SQL_HOST,
-  user: process.env.SQL_USER,
-  password: process.env.SQL_PASSWORD,
-  database: process.env.SQL_DATABASE,
-  port: process.env.SQL_PORT || 5432,
-});
-
-sqlDb.connect()
-  .then(() => {
-    console.log('✅ SQL database connected successfully');
-  })
-  .catch(err => {
-    console.error('❌ SQL database connection error:', err);
-  });
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -101,6 +85,7 @@ app.use(passport.session());
 
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/games', gamesRouter);
+app.use('/api/v1/users', usersRouter);
 
 const offensiveWords = ['badword1', 'badword2']; 
 function isOffensive(text) {
