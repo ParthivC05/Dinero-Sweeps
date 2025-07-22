@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { io } from 'socket.io-client';
 
-const socket = io(import.meta.env.VITE_SOCKET_URL); 
+const socket = io(import.meta.env.VITE_SOCKET_URL || 'http://localhost:8004');
 
 const LOCAL_STORAGE_KEY = 'chat_messages';
 
@@ -9,6 +9,7 @@ const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const messagesEndRef = useRef(null);
+  const user = JSON.parse(localStorage.getItem('user'));
 
   useEffect(() => {
     const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -16,7 +17,6 @@ const Chat = () => {
       setMessages(JSON.parse(stored));
     }
   }, []);
-
 
   useEffect(() => {
     const handleHistory = (msgs) => {
@@ -58,37 +58,43 @@ const Chat = () => {
   const sendMessage = (e) => {
     e.preventDefault();
     if (input.trim()) {
-      socket.emit('send_message', { text: input });
+      socket.emit('send_message', {
+        text: input,
+        userId: user?.id,
+        username: user?.username
+      });
       setInput('');
     }
   };
 
   return (
-    <div className="flex flex-col h-[600px] md:h-[100vh] sm:h-[100vh] min-h-0 bg-gradient-to-b from-black to-pink-900 p-4 font-sans">
-      <div className="flex-1 min-h-0 overflow-y-auto hide-scrollbar">
+    <div className="flex flex-col p-3 h-100vh bg-gradient-to-b from-black to-pink-900 font-sans w-full mx-auto rounded-lg shadow-lg border border-gray-800">
+      <div className="overflow-y-auto hide-scrollbar space-y-3 pb-2">
         {messages.map((msg, idx) => (
-          <div
-            key={idx}
-            className={
-              msg.offensive
-                ? 'border-2 border-yellow-400 bg-yellow-900/20 text-yellow-300 font-bold rounded-xl px-6 py-4 mb-3 text-lg text-center'
-                : 'bg-[#18111A] text-white rounded-xl px-6 py-4 mb-3 text-lg font-normal'
-            }
-          >
-            {msg.text}
+          <div key={idx} className="flex flex-col">
+            <span className="text-xs font-bold text-white mb-1 ml-1">{msg.username || 'Anonymous'}</span>
+            <div
+              className={
+                msg.offensive
+                  ? 'border-2 border-yellow-400 bg-yellow-900/20 text-yellow-300 font-bold rounded-lg px-4 py-3 text-sm text-center'
+                  : 'bg-[#18111A] text-white rounded-lg px-4 py-3 text-sm font-normal'
+              }
+            >
+              {msg.text}
+            </div>
           </div>
         ))}
         <div ref={messagesEndRef} />
       </div>
-      <form onSubmit={sendMessage} className="flex items-center border-t border-pink-900 mt-6 pt-4">
+      <form onSubmit={sendMessage} className="flex items-center border-t border-pink-900 mt-4 pt-3 gap-2">
         <input
-          className="w-full bg-transparent text-white placeholder:text-gray-300 px-0 py-4 border-none outline-none text-lg"
+          className="flex-1 bg-transparent text-white placeholder:text-gray-300 px-3 py-2 border border-yellow-400 rounded-lg outline-none text-sm"
           placeholder="Type your message..."
           value={input}
           onChange={e => setInput(e.target.value)}
         />
         <button
-          className="ml-2 font-bold text-black text-xl bg-transparent hover:underline focus:outline-none"
+          className="bg-yellow-400 text-black font-bold px-5 py-2 rounded-lg text-base hover:bg-yellow-500 transition-colors"
           type="submit"
         >
           Send

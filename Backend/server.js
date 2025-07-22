@@ -12,9 +12,11 @@ import passportConfig from './config/passport.js';
 import http from 'http';
 import { Server as SocketIOServer } from 'socket.io';
 import 'dotenv/config';
-
-import gamesRouter from './routes/games.js';
+import gamesRouter from './routes/games.js';  
 import usersRouter from './routes/users.js';
+import jwt from 'jsonwebtoken';
+import Message from './models/message.js';
+import ChatGroup from './models/ChatGroup.js';
 
 const app = express();
 const server = http.createServer(app);
@@ -47,6 +49,29 @@ const io = new SocketIOServer(server, {
     credentials: true,
   },
 });
+
+app.get('/api/chat/:groupId', async (req, res) => {
+  const messages = await Message.find({ groupId: req.params.groupId }).sort({ createdAt: 1 });
+  res.json(messages);
+});
+
+io.on('connection', async (socket) => {
+  const messages = await Message.find({}).sort({ createdAt: 1 }).limit(100);
+  socket.emit('chat_history', messages);
+
+  socket.on('send_message', async (msg) => {
+    const messageObj = {
+      userId: msg.userId || 'anonymous',
+      username: msg.username || 'Anonymous',
+      message: msg.text,
+      messageType: 'MESSAGE'
+    };
+    const saved = await Message.create(messageObj);
+    console.log('Saved to MongoDB:', saved);
+    io.emit('receive_message', saved);
+  });
+});
+
 const PORT = process.env.PORT || 8004;
 
 mongoose.connect(process.env.MONGODB_URI, {
@@ -70,12 +95,12 @@ app.use(session({
   store: MongoStore.create({
     mongoUrl: process.env.MONGODB_URI,
     collectionName: 'sessions',
-    ttl: 24 * 60 * 60, // 1 day
+    ttl: 24 * 60 * 60, 
   }),
   cookie: {
-    secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+    secure: process.env.NODE_ENV === 'production', 
     httpOnly: true,
-    maxAge: 24 * 60 * 60 * 1000, // 1 day
+    maxAge: 24 * 60 * 60 * 1000, 
   },
 }));
 
@@ -91,19 +116,22 @@ const offensiveWords = ['badword1', 'badword2'];
 function isOffensive(text) {
   return offensiveWords.some(word => text.toLowerCase().includes(word));
 }
-let messages = [];
 
-io.on('connection', (socket) => {
+
+io.on('connection', async (socket) => {
+  const messages = await Message.find({}).sort({ createdAt: 1 }).limit(100);
   socket.emit('chat_history', messages);
-  socket.on('send_message', (msg) => {
-    let messageObj;
-    if (isOffensive(msg.text)) {
-      messageObj = { ...msg, text: 'Deleted because of offensive content', offensive: true };
-    } else {
-      messageObj = { ...msg, offensive: false };
-    }
-    messages.push(messageObj);
-    io.emit('receive_message', messageObj);
+
+  socket.on('send_message', async (msg) => {
+    const messageObj = {
+      userId: msg.userId || 'anonymous',
+      username: msg.username || 'Anonymous',
+      message: msg.text,
+      messageType: 'MESSAGE'
+    };
+    const saved = await Message.create(messageObj);
+    console.log('Saved to MongoDB:', saved);
+    io.emit('receive_message', saved);
   });
 });
 

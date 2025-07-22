@@ -211,7 +211,7 @@ const SignUp = () => {
                 valid={touched.email && !errors.email && form.email}
               />
               <div className="space-y-2">
-                <label htmlFor="password" className="block text-sm font-medium text-white flex items-center">
+                <label htmlFor="password" className="block text-sm font-medium text-white items-center">
                   <Lock className="w-4 h-4 mr-2" />
                   Password
                 </label>
@@ -273,7 +273,7 @@ const SignUp = () => {
                 />
               </div>
               <div className="space-y-2">
-                <label className="block text-sm font-medium text-white flex items-center">
+                <label className="block text-sm font-medium text-white items-center">
                   <Calendar className="w-4 h-4 mr-2" />
                   Date of Birth
                 </label>

@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 4,
+            "activePatchIndex": 5,
             "patches": [
                 {
                     "date": 1752728194493,
@@ -24,6 +24,10 @@
                 {
                     "date": 1753076780027,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -31,12 +31,11 @@\n     \"nodemailer\": \"^6.9.7\",\r\n     \"passport\": \"^0.7.0\",\r\n     \"passport-facebook\": \"^3.0.0\",\r\n     \"passport-google-oauth20\": \"^2.0.0\",\r\n+    \"socket.io\": \"^4.7.5\",\r\n     \"uuid\": \"^9.0.1\",\r\n-    \"winston\": \"^3.11.0\",\r\n-    \"socket.io\": \"^4.7.5\",\r\n-    \"mysql2\": \"^3.9.7\"\r\n+    \"winston\": \"^3.11.0\"\r\n   },\r\n   \"devDependencies\": {\r\n     \"jest\": \"^29.7.0\",\r\n     \"nodemon\": \"^3.0.2\",\r\n"
+                },
+                {
+                    "date": 1753178309168,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -4,9 +4,9 @@\n   \"description\": \"Backend API for Dinero Sweeps gaming platform\",\r\n   \"main\": \"server.js\",\r\n   \"type\": \"module\",\r\n   \"scripts\": {\r\n-    \"start\": \"node server.js\",\r\n+    \"start\": \"nodemon server.js\",\r\n     \"dev\": \"nodemon server.js\",\r\n     \"test\": \"jest\"\r\n   },\r\n   \"dependencies\": {\r\n@@ -15,25 +15,25 @@\n     \"compression\": \"^1.7.4\",\r\n     \"connect-mongo\": \"^5.1.0\",\r\n     \"cors\": \"^2.8.5\",\r\n     \"dotenv\": \"^16.3.1\",\r\n-    \"express\": \"^4.18.2\",\r\n+    \"express\": \"^4.21.2\",\r\n     \"express-rate-limit\": \"^7.1.5\",\r\n     \"express-session\": \"^1.17.3\",\r\n     \"express-validator\": \"^7.0.1\",\r\n     \"helmet\": \"^7.1.0\",\r\n     \"joi\": \"^17.11.0\",\r\n     \"jsonwebtoken\": \"^9.0.2\",\r\n     \"moment\": \"^2.29.4\",\r\n     \"mongodb\": \"^6.17.0\",\r\n-    \"mongoose\": \"^8.0.3\",\r\n+    \"mongoose\": \"^8.16.4\",\r\n     \"morgan\": \"^1.10.0\",\r\n     \"multer\": \"^1.4.5-lts.1\",\r\n     \"nodemailer\": \"^6.9.7\",\r\n     \"passport\": \"^0.7.0\",\r\n     \"passport-facebook\": \"^3.0.0\",\r\n     \"passport-google-oauth20\": \"^2.0.0\",\r\n-    \"socket.io\": \"^4.7.5\",\r\n+    \"socket.io\": \"^4.8.1\",\r\n     \"uuid\": \"^9.0.1\",\r\n     \"winston\": \"^3.11.0\"\r\n   },\r\n   \"devDependencies\": {\r\n"
                 }
             ],
             "date": 1752728194493,

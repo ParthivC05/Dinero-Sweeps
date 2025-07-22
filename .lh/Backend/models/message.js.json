@@ -1,0 +1,30 @@
+{
+    "sourceFile": "backend/models/message.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 3,
+            "patches": [
+                {
+                    "date": 1753161043490,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1753161861250,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,9 +1,10 @@\n-const mongoose = require('mongoose');\r\n+import mongoose from 'mongoose';\r\n const MessageSchema = new mongoose.Schema({\r\n   userId: String,\r\n   groupId: String,\r\n   message: String,\r\n   messageType: { type: String, default: 'MESSAGE' }, // MESSAGE, GIF, etc.\r\n   createdAt: { type: Date, default: Date.now }\r\n });\r\n\\ No newline at end of file\n-module.exports = mongoose.model('Message', MessageSchema);\n+const Message = mongoose.model('Message', MessageSchema);\r\n+export default Message;\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1753177009662,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,10 +1,11 @@\n import mongoose from 'mongoose';\r\n const MessageSchema = new mongoose.Schema({\r\n   userId: String,\r\n+  username: String, // Add this\r\n   groupId: String,\r\n   message: String,\r\n-  messageType: { type: String, default: 'MESSAGE' }, // MESSAGE, GIF, etc.\r\n+  messageType: { type: String, default: 'MESSAGE' },\r\n   createdAt: { type: Date, default: Date.now }\r\n });\r\n const Message = mongoose.model('Message', MessageSchema);\r\n export default Message;\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1753178582973,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,8 @@\n import mongoose from 'mongoose';\r\n const MessageSchema = new mongoose.Schema({\r\n   userId: String,\r\n-  username: String, // Add this\r\n+  username: String,\r\n   groupId: String,\r\n   message: String,\r\n   messageType: { type: String, default: 'MESSAGE' },\r\n   createdAt: { type: Date, default: Date.now }\r\n"
+                }
+            ],
+            "date": 1753161043490,
+            "name": "Commit-0",
+            "content": "const mongoose = require('mongoose');\r\nconst MessageSchema = new mongoose.Schema({\r\n  userId: String,\r\n  groupId: String,\r\n  message: String,\r\n  messageType: { type: String, default: 'MESSAGE' }, // MESSAGE, GIF, etc.\r\n  createdAt: { type: Date, default: Date.now }\r\n});\r\nmodule.exports = mongoose.model('Message', MessageSchema);"
+        }
+    ]
+}
