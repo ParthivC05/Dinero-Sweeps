@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 58,
+            "activePatchIndex": 60,
             "patches": [
                 {
                     "date": 1752728229743,
@@ -240,6 +240,14 @@
                 {
                     "date": 1753179561067,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -134,9 +134,8 @@\n     console.log('Saved to MongoDB:', saved);\r\n     io.emit('receive_message', saved);\r\n   });\r\n });\r\n-// --- End Chat Feature ---\r\n \r\n app.use((err, req, res, next) => {\r\n   res.status(err.status || 500).json({\r\n     success: false,\r\n"
+                },
+                {
+                    "date": 1753181263824,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -14,9 +14,9 @@\n import 'dotenv/config';\r\n import gamesRouter from './routes/games.js';  \r\n import usersRouter from './routes/users.js';\r\n import jwt from 'jsonwebtoken';\r\n-import Message from './models/message.js';\r\n+import Message from './models/Message.js';\r\n import ChatGroup from './models/ChatGroup.js';\r\n \r\n const app = express();\r\n const server = http.createServer(app);\r\n@@ -115,11 +115,10 @@\n const offensiveWords = ['badword1', 'badword2']; \r\n function isOffensive(text) {\r\n   return offensiveWords.some(word => text.toLowerCase().includes(word));\r\n }\r\n-// --- Chat Feature: Global Room, No JWT ---\r\n-let messages = [];\r\n \r\n+\r\n io.on('connection', async (socket) => {\r\n   const messages = await Message.find({}).sort({ createdAt: 1 }).limit(100);\r\n   socket.emit('chat_history', messages);\r\n \r\n"
+                },
+                {
+                    "date": 1753181286850,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -14,9 +14,9 @@\n import 'dotenv/config';\r\n import gamesRouter from './routes/games.js';  \r\n import usersRouter from './routes/users.js';\r\n import jwt from 'jsonwebtoken';\r\n-import Message from './models/Message.js';\r\n+import Message from './models/Message.js';  \r\n import ChatGroup from './models/ChatGroup.js';\r\n \r\n const app = express();\r\n const server = http.createServer(app);\r\n"
                 }
             ],
             "date": 1752728229743,
