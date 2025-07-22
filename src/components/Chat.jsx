@@ -3,8 +3,6 @@ import { io } from 'socket.io-client';
 
 const socket = io(import.meta.env.VITE_SOCKET_URL || 'http://localhost:8004');
 
-const LOCAL_STORAGE_KEY = 'chat_messages';
-
 const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
@@ -12,27 +10,18 @@ const Chat = () => {
   const user = JSON.parse(localStorage.getItem('user'));
 
   useEffect(() => {
-    const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
-    if (stored) {
-      setMessages(JSON.parse(stored));
-    }
+    // Fetch chat history from backend
+    fetch(`${import.meta.env.VITE_API_BASE_URL.replace(/\/api\/v1$/, '')}/api/chat/global`)
+      .then(res => res.json())
+      .then(data => setMessages(data));
   }, []);
 
   useEffect(() => {
     const handleHistory = (msgs) => {
-      setMessages((prev) => {
-        const all = [...prev, ...msgs];
-        const unique = Array.from(new Set(all.map(m => JSON.stringify(m)))).map(s => JSON.parse(s));
-        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(unique));
-        return unique;
-      });
+      setMessages(msgs);
     };
     const handleReceive = (msg) => {
-      setMessages((prev) => {
-        const all = [...prev, msg];
-        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(all));
-        return all;
-      });
+      setMessages((prev) => [...prev, msg]);
     };
     socket.on('chat_history', handleHistory);
     socket.on('receive_message', handleReceive);
@@ -80,7 +69,7 @@ const Chat = () => {
                   : 'bg-[#18111A] text-white rounded-lg px-4 py-3 text-sm font-normal'
               }
             >
-              {msg.text}
+              {msg.message || msg.text}
             </div>
           </div>
         ))}

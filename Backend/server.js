@@ -118,6 +118,7 @@ function isOffensive(text) {
 
 
 io.on('connection', async (socket) => {
+  // Always fetch chat history from MongoDB
   const messages = await Message.find({}).sort({ createdAt: 1 }).limit(100);
   socket.emit('chat_history', messages);
 
