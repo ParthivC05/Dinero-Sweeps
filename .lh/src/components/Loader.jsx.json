@@ -1,0 +1,18 @@
+{
+    "sourceFile": "src/components/Loader.jsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1753187923087,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1753187923087,
+            "name": "Commit-0",
+            "content": "import React from 'react';\r\nimport loaderImg from '../assets/loader.gif';\r\n\r\nconst Loader = ({ size = 200 }) => (\r\n  <div className=\"flex flex-col items-center justify-center w-full h-full py-8\">\r\n    <img    \r\n      src={loaderImg}\r\n      alt=\"Loading...\"\r\n      style={{ width: size, height: size }}\r\n      className=\"animate-spin-slow\"\r\n    />\r\n  \r\n  </div>\r\n);\r\n\r\nexport default Loader;"
+        }
+    ]
+}

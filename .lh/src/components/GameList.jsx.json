@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 33,
+            "activePatchIndex": 36,
             "patches": [
                 {
                     "date": 1752668619196,
@@ -140,6 +140,18 @@
                 {
                     "date": 1753077607224,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -49,9 +49,9 @@\n     setLoading(true);\r\n     fetch(`${import.meta.env.VITE_API_BASE_URL}/games`)\r\n       .then(res => res.json())\r\n       .then(data => {\r\n-        setGames(data.games || []);\r\n+        setGames((data.games || []).slice(0, 12));\r\n         setLoading(false);\r\n       })\r\n       .catch(err => {\r\n         setError(\"Failed to load games\");\r\n@@ -180,9 +180,8 @@\n                   />\r\n                   <div className=\"p-2 text-white text-center font-semibold\">{game.name}</div>\r\n                   {hoveredIdx === idx && (\r\n                     <div className=\"absolute inset-0 flex items-center justify-center bg-black/40 transition-opacity group-hover:opacity-100 opacity-100 gap-4\">\r\n-                      {/* Fun Play (Demo) Icon */}\r\n                       <button\r\n                         className=\"flex flex-col items-center group/play\"\r\n                         title=\"Fun Play\"\r\n                         onClick={e => {\r\n@@ -192,9 +191,8 @@\n                       >\r\n                         <FaRegSmile className=\"text-white text-3xl mb-1 group-hover/play:text-yellow-300\" />\r\n                         <span className=\"text-xs text-white\">Demo</span>\r\n                       </button>\r\n-                      {/* Real Play Icon */}\r\n                       <button\r\n                         className=\"flex flex-col items-center group/play\"\r\n                         title={isLoggedIn() ? \"Real Play\" : \"Login required\"}\r\n                         disabled={!isLoggedIn()}\r\n"
+                },
+                {
+                    "date": 1753187943417,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -148,9 +148,9 @@\n           </button>\r\n         ))}\r\n       </div>\r\n       {loading ? (\r\n-        <div className=\"text-white text-center py-10\">Loading games...</div>\r\n+        <div className=\"text-white text-center py-10\"></div>\r\n       ) : error ? (\r\n         <div className=\"text-red-400 text-center py-10\">{error}</div>\r\n       ) : gameSections.map((section) => (\r\n         <div className=\"mb-10\" key={section}>\r\n"
+                },
+                {
+                    "date": 1753187948885,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -148,9 +148,9 @@\n           </button>\r\n         ))}\r\n       </div>\r\n       {loading ? (\r\n-        <div className=\"text-white text-center py-10\"></div>\r\n+        <div className=\"text-white text-center py-10\">Loading...</div>\r\n       ) : error ? (\r\n         <div className=\"text-red-400 text-center py-10\">{error}</div>\r\n       ) : gameSections.map((section) => (\r\n         <div className=\"mb-10\" key={section}>\r\n"
+                },
+                {
+                    "date": 1753187954672,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,9 @@\n import React, { useState, useEffect, useRef } from \"react\";\r\n import { FaSearch, FaPlay, FaRegSmile } from \"react-icons/fa\";\r\n import slider1 from \"../assets/slider1.png\";\r\n import slider2 from \"../assets/slider2.png\";\r\n+import Loader from \"./Loader\";\r\n \r\n const categories = [\r\n   \"Promotions\", \"Gameplay\", \"Gameway\", \"Net Gaming\", \"Tada Gaming\", \"Hacksaw gaming\"\r\n ];\r\n@@ -148,9 +149,9 @@\n           </button>\r\n         ))}\r\n       </div>\r\n       {loading ? (\r\n-        <div className=\"text-white text-center py-10\">Loading...</div>\r\n+        <div className=\"text-white text-center py-10\"><Loader /></div>\r\n       ) : error ? (\r\n         <div className=\"text-red-400 text-center py-10\">{error}</div>\r\n       ) : gameSections.map((section) => (\r\n         <div className=\"mb-10\" key={section}>\r\n"
                 }
             ],
             "date": 1752668619196,

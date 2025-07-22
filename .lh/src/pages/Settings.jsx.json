@@ -1,0 +1,30 @@
+{
+    "sourceFile": "src/pages/Settings.jsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 3,
+            "patches": [
+                {
+                    "date": 1753188260159,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1753189006288,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,6 +1,7 @@\n import React from \"react\";\r\n-import { NavLink, Outlet } from \"react-router-dom\";\r\n+import { NavLink, Outlet, Routes, Route } from \"react-router-dom\";\r\n+import VerifyProfile from \"./VerifyProfile\";\r\n \r\n const tabs = [\r\n   { label: \"Verify Profile\", path: \"verify-profile\" },\r\n   { label: \"Email\", path: \"email\" },\r\n@@ -10,9 +11,9 @@\n   { label: \"Document Verification\", path: \"document-verification\" },\r\n   { label: \"Self Exclusion\", path: \"self-exclusion\" },\r\n ];\r\n \r\n-const Settings = () => {\r\n+const Settings = ({ user }) => {\r\n   return (\r\n     <div className=\"flex flex-col items-center w-full min-h-screen bg-transparent pt-8 pb-16\">\r\n       {/* Tab Bar */}\r\n       <div className=\"w-full max-w-3xl mb-6\">\r\n@@ -31,8 +32,12 @@\n           ))}\r\n         </div>\r\n       </div>\r\n       <div className=\"w-full max-w-3xl\">\r\n+        <Routes>\r\n+          <Route path=\"verify-profile\" element={<VerifyProfile user={user} />} />\r\n+          {/* Add other tab routes here as needed */}\r\n+        </Routes>\r\n         <Outlet />\r\n       </div>\r\n     </div>\r\n   );\r\n"
+                },
+                {
+                    "date": 1753189765086,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,9 @@\n import React from \"react\";\r\n import { NavLink, Outlet, Routes, Route } from \"react-router-dom\";\r\n import VerifyProfile from \"./VerifyProfile\";\r\n+import Email from \"./Email\";\r\n+import Password from \"./Password\";\r\n \r\n const tabs = [\r\n   { label: \"Verify Profile\", path: \"verify-profile\" },\r\n   { label: \"Email\", path: \"email\" },\r\n@@ -34,8 +36,10 @@\n       </div>\r\n       <div className=\"w-full max-w-3xl\">\r\n         <Routes>\r\n           <Route path=\"verify-profile\" element={<VerifyProfile user={user} />} />\r\n+          <Route path=\"email\" element={<Email user={user} />} />\r\n+          <Route path=\"password\" element={<Password />} />\r\n           {/* Add other tab routes here as needed */}\r\n         </Routes>\r\n         <Outlet />\r\n       </div>\r\n"
+                },
+                {
+                    "date": 1753189866938,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -16,9 +16,8 @@\n \r\n const Settings = ({ user }) => {\r\n   return (\r\n     <div className=\"flex flex-col items-center w-full min-h-screen bg-transparent pt-8 pb-16\">\r\n-      {/* Tab Bar */}\r\n       <div className=\"w-full max-w-3xl mb-6\">\r\n         <div className=\"flex gap-2 bg-transparent\">\r\n           {tabs.map(tab => (\r\n             <NavLink\r\n"
+                }
+            ],
+            "date": 1753188260159,
+            "name": "Commit-0",
+            "content": "import React from \"react\";\r\nimport { NavLink, Outlet } from \"react-router-dom\";\r\n\r\nconst tabs = [\r\n  { label: \"Verify Profile\", path: \"verify-profile\" },\r\n  { label: \"Email\", path: \"email\" },\r\n  { label: \"Password\", path: \"password\" },\r\n  { label: \"Avatar\", path: \"avatar\" },\r\n  { label: \"Bonus Drop\", path: \"bonus-drop\" },\r\n  { label: \"Document Verification\", path: \"document-verification\" },\r\n  { label: \"Self Exclusion\", path: \"self-exclusion\" },\r\n];\r\n\r\nconst Settings = () => {\r\n  return (\r\n    <div className=\"flex flex-col items-center w-full min-h-screen bg-transparent pt-8 pb-16\">\r\n      {/* Tab Bar */}\r\n      <div className=\"w-full max-w-3xl mb-6\">\r\n        <div className=\"flex gap-2 bg-transparent\">\r\n          {tabs.map(tab => (\r\n            <NavLink\r\n              key={tab.path}\r\n              to={tab.path}\r\n              className={({ isActive }) =>\r\n                `px-4 py-2 rounded-t-lg font-bold transition-colors ${isActive ? 'bg-yellow-400 text-black' : 'bg-gray-800 text-white'}`\r\n              }\r\n              end\r\n            >\r\n              {tab.label}\r\n            </NavLink>\r\n          ))}\r\n        </div>\r\n      </div>\r\n      <div className=\"w-full max-w-3xl\">\r\n        <Outlet />\r\n      </div>\r\n    </div>\r\n  );\r\n};\r\n\r\nexport default Settings; "
+        }
+    ]
+}

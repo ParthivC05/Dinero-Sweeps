@@ -1,0 +1,26 @@
+{
+    "sourceFile": "src/pages/MyInfo.jsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1753188252522,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1753188351684,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -4,9 +4,8 @@\n \r\n const MyInfo = ({ user }) => {\r\n   return (\r\n     <div className=\"flex flex-col items-center w-full min-h-screen bg-transparent pt-8 pb-16\">\r\n-      {/* Profile Card */}\r\n       <div className=\"w-full max-w-2xl bg-gradient-to-br from-[#0a2a3a] to-[#0d1e2b] rounded-2xl p-6 shadow-xl relative mb-8\">\r\n         <div className=\"flex items-center gap-6 mb-6\">\r\n           <div className=\"relative\">\r\n             <div className=\"rounded-full border-4 border-yellow-400\" style={{ width: 80, height: 80, overflow: 'hidden' }}>\r\n"
+                },
+                {
+                    "date": 1753188647094,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,12 +1,20 @@\n import React from \"react\";\r\n import Avatar from \"react-avatar\";\r\n import { FaTimes } from \"react-icons/fa\";\r\n+import { useNavigate } from \"react-router-dom\";\r\n \r\n const MyInfo = ({ user }) => {\r\n+  const navigate = useNavigate();\r\n   return (\r\n     <div className=\"flex flex-col items-center w-full min-h-screen bg-transparent pt-8 pb-16\">\r\n       <div className=\"w-full max-w-2xl bg-gradient-to-br from-[#0a2a3a] to-[#0d1e2b] rounded-2xl p-6 shadow-xl relative mb-8\">\r\n+        <button\r\n+          className=\"absolute top-4 right-4 text-2xl text-red-400 hover:text-red-600\"\r\n+          onClick={() => navigate(\"/\")}\r\n+        >\r\n+          <FaTimes />\r\n+        </button>\r\n         <div className=\"flex items-center gap-6 mb-6\">\r\n           <div className=\"relative\">\r\n             <div className=\"rounded-full border-4 border-yellow-400\" style={{ width: 80, height: 80, overflow: 'hidden' }}>\r\n               <Avatar\r\n"
+                }
+            ],
+            "date": 1753188252522,
+            "name": "Commit-0",
+            "content": "import React from \"react\";\r\nimport Avatar from \"react-avatar\";\r\nimport { FaTimes } from \"react-icons/fa\";\r\n\r\nconst MyInfo = ({ user }) => {\r\n  return (\r\n    <div className=\"flex flex-col items-center w-full min-h-screen bg-transparent pt-8 pb-16\">\r\n      {/* Profile Card */}\r\n      <div className=\"w-full max-w-2xl bg-gradient-to-br from-[#0a2a3a] to-[#0d1e2b] rounded-2xl p-6 shadow-xl relative mb-8\">\r\n        <div className=\"flex items-center gap-6 mb-6\">\r\n          <div className=\"relative\">\r\n            <div className=\"rounded-full border-4 border-yellow-400\" style={{ width: 80, height: 80, overflow: 'hidden' }}>\r\n              <Avatar\r\n                src={user.avatar}\r\n                name={user.firstName + ' ' + user.lastName}\r\n                size=\"80\"\r\n                round={true}\r\n              />\r\n            </div>\r\n          </div>\r\n          <div className=\"flex-1\">\r\n            <div className=\"text-2xl font-bold text-white\">{user.firstName} {user.lastName}</div>\r\n            <div className=\"text-lg text-gray-300\">ID: {user._id || user.id}</div>\r\n            <div className=\"text-sm text-white mt-2\">Referred friend: 0</div>\r\n            <div className=\"text-green-400 font-bold\">SC 0 Earned</div>\r\n          </div>\r\n        </div>\r\n        <div className=\"grid grid-cols-4 gap-4 mt-4\">\r\n          <div className=\"rounded-xl border-2 border-yellow-400 p-4 text-center\">\r\n            <div className=\"text-3xl font-bold text-white\">{user.stats?.losses || 0}</div>\r\n            <div className=\"text-lg text-white mt-2\">Losses</div>\r\n          </div>\r\n          <div className=\"rounded-xl border-2 border-yellow-400 p-4 text-center\">\r\n            <div className=\"text-3xl font-bold text-white\">{user.stats?.wins || 0}</div>\r\n            <div className=\"text-lg text-white mt-2\">Wins</div>\r\n          </div>\r\n          <div className=\"rounded-xl border-2 border-yellow-400 p-4 text-center\">\r\n            <div className=\"text-3xl font-bold text-white\">{user.stats?.totalBets || 0}</div>\r\n            <div className=\"text-lg text-white mt-2\">Bet</div>\r\n          </div>\r\n          <div className=\"rounded-xl border-2 border-yellow-400 p-4 text-center\">\r\n            <div className=\"text-3xl font-bold text-white\">$20K</div>\r\n            <div className=\"text-lg text-white mt-2\">Wagered</div>\r\n          </div>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  );\r\n};\r\n\r\nexport default MyInfo; "
+        }
+    ]
+}

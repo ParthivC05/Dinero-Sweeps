@@ -31,6 +31,7 @@ import {
   FaShareAlt,
 } from "react-icons/fa";
 import { GiSpade } from "react-icons/gi";
+import { NavLink } from "react-router-dom";
 
 const Sidebar = () => {
   const [openSection, setOpenSection] = useState("profile");
@@ -52,7 +53,7 @@ const Sidebar = () => {
       hasNotifications: true,
       subItems: [
         { title: "My Info", icon: FaUserCircle, path: "/profile/my-info" },
-        { title: "Settings", icon: FaCog, path: "/profile/settings" },
+        { title: "Settings", icon: FaCog, path: "/profile/settings/verify-profile" },
         { title: "Notifications", icon: FaBell, path: "/notifications" },
         { title: "VIP", icon: FaCrown, path: "/vip" },
         { title: "Affiliate", icon: FaUserFriends, path: "/affiliate" },
@@ -170,17 +171,16 @@ const Sidebar = () => {
             {item.subItems && openSection === item.id && (
               <ul className="mt-3 space-y-2 pl-4">
                 {item.subItems.map((subItem, index) => (
-                  <li 
-                    key={index}
-                    className="flex items-center gap-2 cursor-pointer hover:text-yellow-400 transition-colors py-2 px-3 rounded-lg hover:bg-[#2a1a2a]"
-                    onClick={() => {
-                      if (subItem.path) {
-                        window.location.href = subItem.path;
+                  <li key={index}>
+                    <NavLink
+                      to={subItem.path}
+                      className={({ isActive }) =>
+                        `flex items-center gap-2 cursor-pointer transition-colors py-2 px-3 rounded-lg hover:bg-[#2a1a2a] ${isActive ? 'bg-[#2a1a2a] text-yellow-400' : 'hover:text-yellow-400 text-white'}`
                       }
-                    }}
-                  >
-                    <subItem.icon className="text-sm" />
-                    <span className="text-base">{subItem.title}</span>
+                    >
+                      <subItem.icon className="text-sm" />
+                      <span className="text-base">{subItem.title}</span>
+                    </NavLink>
                   </li>
                 ))}
               </ul>

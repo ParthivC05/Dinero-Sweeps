@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { FaSearch, FaPlay, FaRegSmile } from "react-icons/fa";
 import slider1 from "../assets/slider1.png";
 import slider2 from "../assets/slider2.png";
+import Loader from "./Loader";
 
 const categories = [
   "Promotions", "Gameplay", "Gameway", "Net Gaming", "Tada Gaming", "Hacksaw gaming"
@@ -149,7 +150,7 @@ const GameList = () => {
         ))}
       </div>
       {loading ? (
-        <div className="text-white text-center py-10">Loading games...</div>
+        <div className="text-white text-center py-10"><Loader /></div>
       ) : error ? (
         <div className="text-red-400 text-center py-10">{error}</div>
       ) : gameSections.map((section) => (
