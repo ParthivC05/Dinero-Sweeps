@@ -1,44 +1,33 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { io } from 'socket.io-client';
 
-const socket = io(import.meta.env.VITE_SOCKET_URL || 'http://localhost:8004');
-
-const Chat = () => {
+const Chat = ({ groupId = 'global' }) => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const messagesEndRef = useRef(null);
   const user = JSON.parse(localStorage.getItem('user'));
+  const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    // Fetch chat history from backend
-    fetch(`${import.meta.env.VITE_API_BASE_URL.replace(/\/api\/v1$/, '')}/api/chat/global`)
+    // Fetch chat history for this group
+    fetch(`${import.meta.env.VITE_API_BASE_URL.replace(/\/api\/v1$/, '')}/api/chat/${groupId}`)
       .then(res => res.json())
       .then(data => setMessages(data));
-  }, []);
+  }, [groupId]);
 
   useEffect(() => {
-    const handleHistory = (msgs) => {
-      setMessages(msgs);
-    };
-    const handleReceive = (msg) => {
-      setMessages((prev) => [...prev, msg]);
-    };
-    socket.on('chat_history', handleHistory);
-    socket.on('receive_message', handleReceive);
-    return () => {
-      socket.off('chat_history', handleHistory);
-      socket.off('receive_message', handleReceive);
-    };
-  }, []);
-
-  useEffect(() => {
-    socket.on('connect', () => {
-      console.log('Socket connected:', socket.id);
+    const newSocket = io(import.meta.env.VITE_SOCKET_URL || 'http://localhost:8004', {
+      query: { groupId }
     });
+    setSocket(newSocket);
+
+    newSocket.on('chat_history', (msgs) => setMessages(msgs));
+    newSocket.on('receive_message', (msg) => setMessages(prev => [...prev, msg]));
+
     return () => {
-      socket.off('connect');
+      newSocket.disconnect();
     };
-  }, []);
+  }, [groupId]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -46,11 +35,12 @@ const Chat = () => {
 
   const sendMessage = (e) => {
     e.preventDefault();
-    if (input.trim()) {
+    if (input.trim() && socket) {
       socket.emit('send_message', {
         text: input,
         userId: user?.id,
-        username: user?.username
+        username: user?.username,
+        groupId
       });
       setInput('');
     }

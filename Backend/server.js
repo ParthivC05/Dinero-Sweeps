@@ -55,7 +55,12 @@ app.get('/api/chat/:groupId', async (req, res) => {
 });
 
 io.on('connection', async (socket) => {
-  const messages = await Message.find({}).sort({ createdAt: 1 }).limit(100);
+  // Get groupId from client (default to 'global')
+  const groupId = socket.handshake.query.groupId || 'global';
+  socket.join(groupId);
+
+  // Send chat history for this group
+  const messages = await Message.find({ groupId }).sort({ createdAt: 1 }).limit(100);
   socket.emit('chat_history', messages);
 
   socket.on('send_message', async (msg) => {
@@ -63,11 +68,15 @@ io.on('connection', async (socket) => {
       userId: msg.userId || 'anonymous',
       username: msg.username || 'Anonymous',
       message: msg.text,
-      messageType: 'MESSAGE'
+      messageType: 'MESSAGE',
+      groupId: msg.groupId || groupId
     };
     const saved = await Message.create(messageObj);
-    console.log('Saved to MongoDB:', saved);
-    io.emit('receive_message', saved);
+    io.to(messageObj.groupId).emit('receive_message', saved);
+  });
+
+  socket.on('disconnect', () => {
+    socket.leave(groupId);
   });
 });
 
@@ -115,25 +124,6 @@ const offensiveWords = ['badword1', 'badword2'];
 function isOffensive(text) {
   return offensiveWords.some(word => text.toLowerCase().includes(word));
 }
-
-
-io.on('connection', async (socket) => {
-  // Always fetch chat history from MongoDB
-  const messages = await Message.find({}).sort({ createdAt: 1 }).limit(100);
-  socket.emit('chat_history', messages);
-
-  socket.on('send_message', async (msg) => {
-    const messageObj = {
-      userId: msg.userId || 'anonymous',
-      username: msg.username || 'Anonymous',
-      message: msg.text,
-      messageType: 'MESSAGE'
-    };
-    const saved = await Message.create(messageObj);
-    console.log('Saved to MongoDB:', saved);
-    io.emit('receive_message', saved);
-  });
-});
 
 app.use((err, req, res, next) => {
   res.status(err.status || 500).json({

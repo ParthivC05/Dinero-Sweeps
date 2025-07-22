@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 67,
+            "activePatchIndex": 68,
             "patches": [
                 {
                     "date": 1752728229743,
@@ -276,6 +276,10 @@
                 {
                     "date": 1753183257446,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -54,9 +54,8 @@\n   res.json(messages);\r\n });\r\n \r\n io.on('connection', async (socket) => {\r\n-  // Always fetch chat history from MongoDB\r\n   const messages = await Message.find({}).sort({ createdAt: 1 }).limit(100);\r\n   socket.emit('chat_history', messages);\r\n \r\n   socket.on('send_message', async (msg) => {\r\n"
+                },
+                {
+                    "date": 1753183849757,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -54,22 +54,31 @@\n   res.json(messages);\r\n });\r\n \r\n io.on('connection', async (socket) => {\r\n-  const messages = await Message.find({}).sort({ createdAt: 1 }).limit(100);\r\n+  // Get groupId from client (default to 'global')\r\n+  const groupId = socket.handshake.query.groupId || 'global';\r\n+  socket.join(groupId);\r\n+\r\n+  // Send chat history for this group\r\n+  const messages = await Message.find({ groupId }).sort({ createdAt: 1 }).limit(100);\r\n   socket.emit('chat_history', messages);\r\n \r\n   socket.on('send_message', async (msg) => {\r\n     const messageObj = {\r\n       userId: msg.userId || 'anonymous',\r\n       username: msg.username || 'Anonymous',\r\n       message: msg.text,\r\n-      messageType: 'MESSAGE'\r\n+      messageType: 'MESSAGE',\r\n+      groupId: msg.groupId || groupId\r\n     };\r\n     const saved = await Message.create(messageObj);\r\n-    console.log('Saved to MongoDB:', saved);\r\n-    io.emit('receive_message', saved);\r\n+    io.to(messageObj.groupId).emit('receive_message', saved);\r\n   });\r\n+\r\n+  socket.on('disconnect', () => {\r\n+    socket.leave(groupId);\r\n+  });\r\n });\r\n \r\n const PORT = process.env.PORT || 8004;\r\n \r\n@@ -115,27 +124,8 @@\n function isOffensive(text) {\r\n   return offensiveWords.some(word => text.toLowerCase().includes(word));\r\n }\r\n \r\n-\r\n-io.on('connection', async (socket) => {\r\n-  // Always fetch chat history from MongoDB\r\n-  const messages = await Message.find({}).sort({ createdAt: 1 }).limit(100);\r\n-  socket.emit('chat_history', messages);\r\n-\r\n-  socket.on('send_message', async (msg) => {\r\n-    const messageObj = {\r\n-      userId: msg.userId || 'anonymous',\r\n-      username: msg.username || 'Anonymous',\r\n-      message: msg.text,\r\n-      messageType: 'MESSAGE'\r\n-    };\r\n-    const saved = await Message.create(messageObj);\r\n-    console.log('Saved to MongoDB:', saved);\r\n-    io.emit('receive_message', saved);\r\n-  });\r\n-});\r\n-\r\n app.use((err, req, res, next) => {\r\n   res.status(err.status || 500).json({\r\n     success: false,\r\n     error: err.message || 'Server error',\r\n"
                 }
             ],
             "date": 1752728229743,
