@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 60,
+            "activePatchIndex": 65,
             "patches": [
                 {
                     "date": 1752728229743,
@@ -248,6 +248,26 @@
                 {
                     "date": 1753181286850,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -14,9 +14,9 @@\n import 'dotenv/config';\r\n import gamesRouter from './routes/games.js';  \r\n import usersRouter from './routes/users.js';\r\n import jwt from 'jsonwebtoken';\r\n-import Message from './models/Message.js';\r\n+import Message from './models/Message.js';  \r\n import ChatGroup from './models/ChatGroup.js';\r\n \r\n const app = express();\r\n const server = http.createServer(app);\r\n"
+                },
+                {
+                    "date": 1753181650463,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -13,10 +13,9 @@\n import { Server as SocketIOServer } from 'socket.io';\r\n import 'dotenv/config';\r\n import gamesRouter from './routes/games.js';  \r\n import usersRouter from './routes/users.js';\r\n-import jwt from 'jsonwebtoken';\r\n-import Message from './models/Message.js';  \r\n+import jwt from 'jsonwebtoken';  \r\n import ChatGroup from './models/ChatGroup.js';\r\n \r\n const app = express();\r\n const server = http.createServer(app);\r\n"
+                },
+                {
+                    "date": 1753181659471,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -13,9 +13,10 @@\n import { Server as SocketIOServer } from 'socket.io';\r\n import 'dotenv/config';\r\n import gamesRouter from './routes/games.js';  \r\n import usersRouter from './routes/users.js';\r\n-import jwt from 'jsonwebtoken';  \r\n+import jwt from 'jsonwebtoken'; \r\n+import Messa \r\n import ChatGroup from './models/ChatGroup.js';\r\n \r\n const app = express();\r\n const server = http.createServer(app);\r\n"
+                },
+                {
+                    "date": 1753181665249,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -14,10 +14,9 @@\n import 'dotenv/config';\r\n import gamesRouter from './routes/games.js';  \r\n import usersRouter from './routes/users.js';\r\n import jwt from 'jsonwebtoken'; \r\n-import Messa \r\n-import ChatGroup from './models/ChatGroup.js';\r\n+import Message from './models/Message.js';\r\n \r\n const app = express();\r\n const server = http.createServer(app);\r\n \r\n"
+                },
+                {
+                    "date": 1753181804684,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -14,9 +14,8 @@\n import 'dotenv/config';\r\n import gamesRouter from './routes/games.js';  \r\n import usersRouter from './routes/users.js';\r\n import jwt from 'jsonwebtoken'; \r\n-import Message from './models/Message.js';\r\n \r\n const app = express();\r\n const server = http.createServer(app);\r\n \r\n"
+                },
+                {
+                    "date": 1753181884540,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -14,8 +14,9 @@\n import 'dotenv/config';\r\n import gamesRouter from './routes/games.js';  \r\n import usersRouter from './routes/users.js';\r\n import jwt from 'jsonwebtoken'; \r\n+import Message from './models/Message.js';\r\n \r\n const app = express();\r\n const server = http.createServer(app);\r\n \r\n"
                 }
             ],
             "date": 1752728229743,

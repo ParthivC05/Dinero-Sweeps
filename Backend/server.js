@@ -14,9 +14,8 @@ import { Server as SocketIOServer } from 'socket.io';
 import 'dotenv/config';
 import gamesRouter from './routes/games.js';  
 import usersRouter from './routes/users.js';
-import jwt from 'jsonwebtoken';
-import Message from './models/message.js';  
-import ChatGroup from './models/ChatGroup.js';
+import jwt from 'jsonwebtoken'; 
+import Message from './models/Message.js';
 
 const app = express();
 const server = http.createServer(app);

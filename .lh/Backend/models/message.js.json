@@ -1,9 +1,9 @@
 {
-    "sourceFile": "backend/models/message.js",
+    "sourceFile": "backend/models/Message.js",
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 3,
+            "activePatchIndex": 7,
             "patches": [
                 {
                     "date": 1753161043490,
@@ -20,6 +20,22 @@
                 {
                     "date": 1753178582973,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,8 @@\n import mongoose from 'mongoose';\r\n const MessageSchema = new mongoose.Schema({\r\n   userId: String,\r\n-  username: String, // Add this\r\n+  username: String,\r\n   groupId: String,\r\n   message: String,\r\n   messageType: { type: String, default: 'MESSAGE' },\r\n   createdAt: { type: Date, default: Date.now }\r\n"
+                },
+                {
+                    "date": 1753181594255,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,11 +0,0 @@\n-import mongoose from 'mongoose';\r\n-const MessageSchema = new mongoose.Schema({\r\n-  userId: String,\r\n-  username: String,\r\n-  groupId: String,\r\n-  message: String,\r\n-  messageType: { type: String, default: 'MESSAGE' },\r\n-  createdAt: { type: Date, default: Date.now }\r\n-});\r\n-const Message = mongoose.model('Message', MessageSchema);\r\n-export default Message;\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1753181642962,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,11 @@\n+import mongoose from 'mongoose';\r\n+const MessageSchema = new mongoose.Schema({\r\n+  userId: String,\r\n+  username: String,\r\n+  groupId: String,\r\n+  message: String,\r\n+  messageType: { type: String, default: 'MESSAGE' },\r\n+  createdAt: { type: Date, default: Date.now }\r\n+});\r\n+const Message = mongoose.model('Message', MessageSchema);\r\n+export default Message;\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1753181862982,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,11 +1,1 @@\n-import mongoose from 'mongoose';\r\n-const MessageSchema = new mongoose.Schema({\r\n-  userId: String,\r\n-  username: String,\r\n-  groupId: String,\r\n-  message: String,\r\n-  messageType: { type: String, default: 'MESSAGE' },\r\n-  createdAt: { type: Date, default: Date.now }\r\n-});\r\n-const Message = mongoose.model('Message', MessageSchema);\r\n-export default Message;\n\\ No newline at end of file\n+import ChatGroup from './models/ChatGroup.js';\r\n"
+                },
+                {
+                    "date": 1753181877165,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,1 +1,11 @@\n-import ChatGroup from './models/ChatGroup.js';\r\n+import mongoose from 'mongoose';\r\n+const MessageSchema = new mongoose.Schema({\r\n+  userId: String,\r\n+  username: String,\r\n+  groupId: String,\r\n+  message: String,\r\n+  messageType: { type: String, default: 'MESSAGE' },\r\n+  createdAt: { type: Date, default: Date.now }\r\n+});\r\n+const Message = mongoose.model('Message', MessageSchema);\r\n+export default Message;\n\\ No newline at end of file\n"
                 }
             ],
             "date": 1753161043490,
