@@ -1,0 +1,22 @@
+{
+    "sourceFile": "backend/models/BonusCode.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1753270398649,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1753273734942,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -4,9 +4,9 @@\n   code: { type: String, required: true, unique: true },\r\n   rewardType: { type: String, enum: ['GC', 'SC', 'other'], required: true },\r\n   rewardAmount: { type: Number, required: true },\r\n   expiresAt: { type: Date, required: true },\r\n-  maxRedemptions: { type: Number, default: 1 }, // per user\r\n+  maxRedemptions: { type: Number, default: 1 },\r\n   totalRedemptions: { type: Number, default: 0 }\r\n }, { timestamps: true });\r\n \r\n export default mongoose.model('BonusCode', BonusCodeSchema); \n\\ No newline at end of file\n"
+                }
+            ],
+            "date": 1753270398649,
+            "name": "Commit-0",
+            "content": "import mongoose from 'mongoose';\r\n\r\nconst BonusCodeSchema = new mongoose.Schema({\r\n  code: { type: String, required: true, unique: true },\r\n  rewardType: { type: String, enum: ['GC', 'SC', 'other'], required: true },\r\n  rewardAmount: { type: Number, required: true },\r\n  expiresAt: { type: Date, required: true },\r\n  maxRedemptions: { type: Number, default: 1 }, // per user\r\n  totalRedemptions: { type: Number, default: 0 }\r\n}, { timestamps: true });\r\n\r\nexport default mongoose.model('BonusCode', BonusCodeSchema); "
+        }
+    ]
+}

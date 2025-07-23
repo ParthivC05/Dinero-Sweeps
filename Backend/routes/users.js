@@ -1,10 +1,21 @@
 import express from 'express';
 import multer from 'multer';
+import path from 'path';
 import { getProfile, updateProfile, uploadAvatar, uploadVerificationDoc, setSelfExclusion, changePassword } from '../controllers/userController.js';
 import jwtAuth from '../middleware/jwtAuth.js';
 
 const router = express.Router();
-const upload = multer({ dest: 'uploads/avatars/' });
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/avatars/');
+  },
+  filename: function (req, file, cb) {
+    const ext = path.extname(file.originalname);
+    cb(null, Date.now() + ext);
+  }
+});
+const upload = multer({ storage });
 const docUpload = multer({ dest: 'uploads/verification/' });
 
 router.get('/me', jwtAuth, getProfile);

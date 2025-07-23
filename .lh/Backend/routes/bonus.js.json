@@ -1,0 +1,18 @@
+{
+    "sourceFile": "backend/routes/bonus.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1753270415872,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1753270415872,
+            "name": "Commit-0",
+            "content": "import express from 'express';\r\nimport jwtAuth from '../middleware/jwtAuth.js';\r\nimport { redeemBonus } from '../controllers/bonusController.js';\r\n\r\nconst router = express.Router();\r\nrouter.post('/redeem', jwtAuth, redeemBonus);\r\n\r\nexport default router; "
+        }
+    ]
+}

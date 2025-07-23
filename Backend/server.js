@@ -16,6 +16,7 @@ import gamesRouter from './routes/games.js';
 import usersRouter from './routes/users.js';
 import jwt from 'jsonwebtoken'; 
 import Message from './models/Message.js';
+import bonusRouter from './routes/bonus.js';
 
 const app = express();
 const server = http.createServer(app);
@@ -55,11 +56,9 @@ app.get('/api/chat/:groupId', async (req, res) => {
 });
 
 io.on('connection', async (socket) => {
-  // Get groupId from client (default to 'global')
   const groupId = socket.handshake.query.groupId || 'global';
   socket.join(groupId);
 
-  // Send chat history for this group
   const messages = await Message.find({ groupId }).sort({ createdAt: 1 }).limit(100);
   socket.emit('chat_history', messages);
 
@@ -119,6 +118,15 @@ app.use(passport.session());
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/games', gamesRouter);
 app.use('/api/v1/users', usersRouter);
+app.use('/api/v1/bonus', bonusRouter);
+app.use('/uploads', (req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.header('Cross-Origin-Resource-Policy', 'cross-origin');
+  res.header('Content-Security-Policy', "img-src * data:; default-src 'self';");
+  next();
+}, express.static('uploads'));
 
 const offensiveWords = ['badword1', 'badword2']; 
 function isOffensive(text) {

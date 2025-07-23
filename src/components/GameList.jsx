@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { FaSearch, FaPlay, FaRegSmile } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import slider1 from "../assets/slider1.png";
 import slider2 from "../assets/slider2.png";
 import Loader from "./Loader";
@@ -37,6 +38,7 @@ const GameList = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [hoveredIdx, setHoveredIdx] = useState(null);
+  const navigate = useNavigate();
 
   const nextSlide = () => setCurrent((prev) => (prev + 1) % slides.length);
   const prevSlide = () => setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
@@ -91,8 +93,10 @@ const GameList = () => {
             className="flex-1 bg-transparent outline-none text-white placeholder:text-gray-400 text-base"
           />
         </div>
-        <button className="relative bg-gradient-to-b from-[#C0013A] to-[#A8002F] text-white font-medium rounded-lg px-8 py-2 text-lg shadow-md hover:brightness-110 transition-all">
-          <span className="absolute -top-2 left-3 w-4 h-4 bg-white rounded-t-md rotate-45" style={{clipPath:'polygon(0 0,100% 0,100% 100%)'}}></span>
+        <button
+          className="relative bg-gradient-to-b from-[#C0013A] to-[#A8002F] text-white font-medium rounded-lg px-8 py-2 text-lg shadow-md hover:brightness-110 transition-all"
+          onClick={() => navigate('/get-coins')}
+        >
           <span className="relative z-10">Get Coins</span>
         </button>
       </div>

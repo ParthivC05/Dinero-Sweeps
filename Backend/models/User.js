@@ -14,6 +14,10 @@ const userSchema = new mongoose.Schema({
   avatar: { type: String }, 
   phone: { type: String },
   address: { type: String },
+  address2: { type: String },
+  state: { type: String },
+  city: { type: String },
+  zipcode: { type: String },
   communicationPreferences: {
     email: { type: Boolean, default: true },
     sms: { type: Boolean, default: false },
@@ -41,6 +45,12 @@ const userSchema = new mongoose.Schema({
     losses: { type: Number, default: 0 },
     totalBets: { type: Number, default: 0 },
   },
+  bonusHistory: [{
+    code: String,
+    redeemedAt: Date,
+    rewardType: String,
+    rewardAmount: Number
+  }],
 }, { timestamps: true });
 
 userSchema.pre('save', async function(next) {

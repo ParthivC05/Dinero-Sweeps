@@ -1,0 +1,18 @@
+{
+    "sourceFile": "backend/routes/selfExclusion.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1753249807136,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1753249807136,
+            "name": "Commit-0",
+            "content": "import express from 'express';\r\nimport { requestSelfExclusion, getSelfExclusionStatus, adminUpdateSelfExclusion } from '../controllers/selfExclusionController.js';\r\nimport auth from '../middleware/jwtAuth.js';\r\n\r\nconst router = express.Router();\r\n\r\nrouter.post('/request', auth, requestSelfExclusion);\r\nrouter.get('/me', auth, getSelfExclusionStatus);\r\nrouter.put('/admin/:id', auth, adminUpdateSelfExclusion);\r\n\r\nexport default router; "
+        }
+    ]
+}

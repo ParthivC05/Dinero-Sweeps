@@ -1,0 +1,22 @@
+{
+    "sourceFile": "backend/controllers/bonusController.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1753270407263,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1753273728237,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -14,9 +14,8 @@\n   if (user.bonusHistory && user.bonusHistory.some(b => b.code === code)) {\r\n     return res.status(400).json({ error: 'Code already redeemed.' });\r\n   }\r\n \r\n-  // Add to bonusHistory\r\n   user.bonusHistory = user.bonusHistory || [];\r\n   user.bonusHistory.push({\r\n     code,\r\n     redeemedAt: new Date(),\r\n"
+                }
+            ],
+            "date": 1753270407263,
+            "name": "Commit-0",
+            "content": "import BonusCode from '../models/BonusCode.js';\r\nimport User from '../models/User.js';\r\n\r\nexport const redeemBonus = async (req, res) => {\r\n  const { code } = req.body;\r\n  if (!code || !/^[a-zA-Z0-9]{10}$/.test(code)) {\r\n    return res.status(400).json({ error: 'Invalid code format.' });\r\n  }\r\n  const bonus = await BonusCode.findOne({ code });\r\n  if (!bonus) return res.status(404).json({ error: 'Invalid code.' });\r\n  if (bonus.expiresAt < new Date()) return res.status(400).json({ error: 'Code expired.' });\r\n\r\n  const user = await User.findById(req.user._id);\r\n  if (user.bonusHistory && user.bonusHistory.some(b => b.code === code)) {\r\n    return res.status(400).json({ error: 'Code already redeemed.' });\r\n  }\r\n\r\n  // Add to bonusHistory\r\n  user.bonusHistory = user.bonusHistory || [];\r\n  user.bonusHistory.push({\r\n    code,\r\n    redeemedAt: new Date(),\r\n    rewardType: bonus.rewardType,\r\n    rewardAmount: bonus.rewardAmount\r\n  });\r\n  await user.save();\r\n\r\n  bonus.totalRedemptions += 1;\r\n  await bonus.save();\r\n\r\n  res.json({\r\n    message: 'Bonus successfully applied!',\r\n    rewardType: bonus.rewardType,\r\n    rewardAmount: bonus.rewardAmount\r\n  });\r\n}; "
+        }
+    ]
+}

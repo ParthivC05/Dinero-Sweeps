@@ -3,88 +3,28 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 18,
+            "activePatchIndex": 3,
             "patches": [
                 {
-                    "date": 1752474442231,
+                    "date": 1753268656245,
                     "content": "Index: \n===================================================================\n--- \n+++ \n"
                 },
                 {
-                    "date": 1752474447797,
-                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,15 +1,16 @@\n import { useState } from 'react'\n import reactLogo from './assets/react.svg'\n import viteLogo from '/vite.svg'\n import './App.css'\n+import SignUp from './pages/SignUp'\n \n function App() {\n   const [count, setCount] = useState(0)\n \n   return (\n     <>\n-      <\n+      <SignUp/>\n     </>\n   )\n }\n \n"
+                    "date": 1753272973151,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,8 +5,9 @@\n import OAuthCallback from \"./pages/OAuthCallback\";\r\n import MainLayout from \"./components/MainLayout\";\r\n import GameList from \"./components/GameList\";\r\n import Profile from \"./pages/Profile\";\r\n+import GetCoins from \"./pages/GetCoins\";\r\n import './App.css';\r\n \r\n function ProtectedRoute() {\r\n   const isLoggedIn = !!localStorage.getItem('authToken');\r\n@@ -24,8 +25,9 @@\n           <Route path=\"\" element={<GameList />} />\r\n           <Route element={<ProtectedRoute />}>\r\n             <Route path=\"profile/*\" element={<Profile />} />\r\n           </Route>\r\n+          <Route path=\"get-coins\" element={<GetCoins />} />\r\n           {/* Add more routes as needed */}\r\n         </Route>\r\n       </Routes>\r\n     </BrowserRouter>\r\n"
                 },
                 {
-                    "date": 1752494234166,
-                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -8,9 +8,9 @@\n   const [count, setCount] = useState(0)\n \n   return (\n     <>\n-      <SignUp/>\n+      {/* <SignUp/> */}\n     </>\n   )\n }\n \n"
+                    "date": 1753273034957,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -25,9 +25,9 @@\n           <Route path=\"\" element={<GameList />} />\r\n           <Route element={<ProtectedRoute />}>\r\n             <Route path=\"profile/*\" element={<Profile />} />\r\n           </Route>\r\n-          <Route path=\"get-coins\" element={<GetCoins />} />\r\n+         \r\n           {/* Add more routes as needed */}\r\n         </Route>\r\n       </Routes>\r\n     </BrowserRouter>\r\n"
                 },
                 {
-                    "date": 1752494248429,
-                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -9,8 +9,9 @@\n \n   return (\n     <>\n       {/* <SignUp/> */}\n+      <\n     </>\n   )\n }\n \n"
-                },
-                {
-                    "date": 1752494259270,
-                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -9,9 +9,9 @@\n \n   return (\n     <>\n       {/* <SignUp/> */}\n-      <\n+      \n     </>\n   )\n }\n \n"
-                },
-                {
-                    "date": 1752494265497,
-                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -2,16 +2,17 @@\n import reactLogo from './assets/react.svg'\n import viteLogo from '/vite.svg'\n import './App.css'\n import SignUp from './pages/SignUp'\n+import Login from './pages/Login'\n \n function App() {\n   const [count, setCount] = useState(0)\n \n   return (\n     <>\n       {/* <SignUp/> */}\n-      \n+      <Login\n     </>\n   )\n }\n \n"
-                },
-                {
-                    "date": 1752495126493,
-                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -9,10 +9,10 @@\n   const [count, setCount] = useState(0)\n \n   return (\n     <>\n-      {/* <SignUp/> */}\n-      <Login\n+      <SignUp/>\n+      <Login/>\n     </>\n   )\n }\n \n"
-                },
-                {
-                    "date": 1752495520546,
-                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,19 +1,23 @@\n-import { useState } from 'react'\n-import reactLogo from './assets/react.svg'\n-import viteLogo from '/vite.svg'\n-import './App.css'\n-import SignUp from './pages/SignUp'\n-import Login from './pages/Login'\n+import React from 'react';\n+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';\n+import Navbar from './components/Navbar';\n+import SignUp from './pages/SignUp';\n+import Login from './pages/Login';\n+import './App.css';\n \n function App() {\n-  const [count, setCount] = useState(0)\n-\n   return (\n-    <>\n-      <SignUp/>\n-      <Login/>\n-    </>\n-  )\n+    <div>\n+      <BrowserRouter>\n+        <Navbar />\n+        <Routes>\n+          <Route path=\"/\" element={<Navigate to=\"/login\" replace />} />\n+          <Route path=\"/login\" element={<Login />} />\n+          <Route path=\"/signup\" element={<SignUp />} />\n+        </Routes>\n+      </BrowserRouter>\n+    </div>\n+  );\n }\n \n-export default App\n+export default App;\n"
-                },
-                {
-                    "date": 1752666295282,
-                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,23 +1,25 @@\n-import React from 'react';\n-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';\n-import Navbar from './components/Navbar';\n-import SignUp from './pages/SignUp';\n-import Login from './pages/Login';\n-import './App.css';\n-\n-function App() {\n-  return (\n-    <div>\n-      <BrowserRouter>\n-        <Navbar />\n-        <Routes>\n-          <Route path=\"/\" element={<Navigate to=\"/login\" replace />} />\n-          <Route path=\"/login\" element={<Login />} />\n-          <Route path=\"/signup\" element={<SignUp />} />\n-        </Routes>\n-      </BrowserRouter>\n-    </div>\n-  );\n-}\n-\n-export default App;\n+import React from 'react';\r\n+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';\r\n+import Navbar from './components/Navbar';\r\n+import SignUp from './pages/SignUp';\r\n+import Login from './pages/Login';\r\n+import OAuthCallback from './pages/OAuthCallback';\r\n+import './App.css';\r\n+\r\n+function App() {\r\n+  return (\r\n+    <div>\r\n+      <BrowserRouter>\r\n+        <Navbar />\r\n+        <Routes>\r\n+          <Route path=\"/\" element={<Navigate to=\"/login\" replace />} />\r\n+          <Route path=\"/login\" element={<Login />} />\r\n+          <Route path=\"/signup\" element={<SignUp />} />\r\n+          <Route path=\"/oauth-callback\" element={<OAuthCallback />} />\r\n+        </Routes>\r\n+      </BrowserRouter>\r\n+    </div>\r\n+  );\r\n+}\r\n+\r\n+export default App;\r\n"
-                },
-                {
-                    "date": 1752668631182,
-                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,25 +1,22 @@\n-import React from 'react';\r\n-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';\r\n-import Navbar from './components/Navbar';\r\n-import SignUp from './pages/SignUp';\r\n-import Login from './pages/Login';\r\n-import OAuthCallback from './pages/OAuthCallback';\r\n+import React from \"react\";\r\n+import { BrowserRouter, Routes, Route } from \"react-router-dom\";\r\n+import LandingPage from \"./pages/LandingPage\";\r\n+import Login from \"./pages/Login\";\r\n+import SignUp from \"./pages/SignUp\";\r\n+import OAuthCallback from \"./pages/OAuthCallback\";\r\n import './App.css';\r\n \r\n function App() {\r\n   return (\r\n-    <div>\r\n-      <BrowserRouter>\r\n-        <Navbar />\r\n-        <Routes>\r\n-          <Route path=\"/\" element={<Navigate to=\"/login\" replace />} />\r\n-          <Route path=\"/login\" element={<Login />} />\r\n-          <Route path=\"/signup\" element={<SignUp />} />\r\n-          <Route path=\"/oauth-callback\" element={<OAuthCallback />} />\r\n-        </Routes>\r\n-      </BrowserRouter>\r\n-    </div>\r\n+    <BrowserRouter>\r\n+      <Routes>\r\n+        <Route path=\"/\" element={<LandingPage />} />\r\n+        <Route path=\"/login\" element={<Login />} />\r\n+        <Route path=\"/signup\" element={<SignUp />} />\r\n+        <Route path=\"/oauth-callback\" element={<OAuthCallback />} />\r\n+      </Routes>\r\n+    </BrowserRouter>\r\n   );\r\n }\r\n \r\n export default App;\r\n"
-                },
-                {
-                    "date": 1752729934174,
-                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -9,9 +9,9 @@\n function App() {\r\n   return (\r\n     <BrowserRouter>\r\n       <Routes>\r\n-        <Route path=\"/\" element={<LandingPage />} />\r\n+        {/* <Route path=\"/\" element={<LandingPage />} /> */}\r\n         <Route path=\"/login\" element={<Login />} />\r\n         <Route path=\"/signup\" element={<SignUp />} />\r\n         <Route path=\"/oauth-callback\" element={<OAuthCallback />} />\r\n       </Routes>\r\n"
-                },
-                {
-                    "date": 1752729998071,
-                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,6 @@\n import React from \"react\";\r\n import { BrowserRouter, Routes, Route } from \"react-router-dom\";\r\n-import LandingPage from \"./pages/LandingPage\";\r\n import Login from \"./pages/Login\";\r\n import SignUp from \"./pages/SignUp\";\r\n import OAuthCallback from \"./pages/OAuthCallback\";\r\n import './App.css';\r\n"
-                },
-                {
-                    "date": 1752749082977,
-                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -8,9 +8,9 @@\n function App() {\r\n   return (\r\n     <BrowserRouter>\r\n       <Routes>\r\n-        {/* <Route path=\"/\" element={<LandingPage />} /> */}\r\n+        <Route path=\"/\" element={<LandingPage />} />\r\n         <Route path=\"/login\" element={<Login />} />\r\n         <Route path=\"/signup\" element={<SignUp />} />\r\n         <Route path=\"/oauth-callback\" element={<OAuthCallback />} />\r\n       </Routes>\r\n"
-                },
-                {
-                    "date": 1752749089777,
-                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -8,9 +8,9 @@\n function App() {\r\n   return (\r\n     <BrowserRouter>\r\n       <Routes>\r\n-        <Route path=\"/\" element={<LandingPage />} />\r\n+        <Route path=\"/\" element={< />} />\r\n         <Route path=\"/login\" element={<Login />} />\r\n         <Route path=\"/signup\" element={<SignUp />} />\r\n         <Route path=\"/oauth-callback\" element={<OAuthCallback />} />\r\n       </Routes>\r\n"
-                },
-                {
-                    "date": 1752749120234,
-                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -8,9 +8,9 @@\n function App() {\r\n   return (\r\n     <BrowserRouter>\r\n       <Routes>\r\n-        <Route path=\"/\" element={< />} />\r\n+        <Route path=\"/\" element={<LandingPage />} />\r\n         <Route path=\"/login\" element={<Login />} />\r\n         <Route path=\"/signup\" element={<SignUp />} />\r\n         <Route path=\"/oauth-callback\" element={<OAuthCallback />} />\r\n       </Routes>\r\n"
-                },
-                {
-                    "date": 1752749132420,
-                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -3,8 +3,9 @@\n import Login from \"./pages/Login\";\r\n import SignUp from \"./pages/SignUp\";\r\n import OAuthCallback from \"./pages/OAuthCallback\";\r\n import './App.css';\r\n+import LandingPage from \"./pages/LandingPage\";\r\n \r\n function App() {\r\n   return (\r\n     <BrowserRouter>\r\n"
-                },
-                {
-                    "date": 1753094888450,
-                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -12,8 +12,9 @@\n       <Routes>\r\n         <Route path=\"/\" element={<LandingPage />} />\r\n         <Route path=\"/login\" element={<Login />} />\r\n         <Route path=\"/signup\" element={<SignUp />} />\r\n+        <Route path=\"/signup\" element={<SignUp />} />\r\n         <Route path=\"/oauth-callback\" element={<OAuthCallback />} />\r\n       </Routes>\r\n     </BrowserRouter>\r\n   );\r\n"
-                },
-                {
-                    "date": 1753094898892,
-                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -12,9 +12,9 @@\n       <Routes>\r\n         <Route path=\"/\" element={<LandingPage />} />\r\n         <Route path=\"/login\" element={<Login />} />\r\n         <Route path=\"/signup\" element={<SignUp />} />\r\n-        <Route path=\"/signup\" element={<SignUp />} />\r\n+        <Route path=\"/profile\" element={<Profile />} />\r\n         <Route path=\"/oauth-callback\" element={<OAuthCallback />} />\r\n       </Routes>\r\n     </BrowserRouter>\r\n   );\r\n"
-                },
-                {
-                    "date": 1753101228867,
-                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -4,17 +4,18 @@\n import SignUp from \"./pages/SignUp\";\r\n import OAuthCallback from \"./pages/OAuthCallback\";\r\n import './App.css';\r\n import LandingPage from \"./pages/LandingPage\";\r\n+import Profile from \"./pages/Profile\";\r\n \r\n function App() {\r\n   return (\r\n     <BrowserRouter>\r\n       <Routes>\r\n         <Route path=\"/\" element={<LandingPage />} />\r\n         <Route path=\"/login\" element={<Login />} />\r\n         <Route path=\"/signup\" element={<SignUp />} />\r\n-        <Route path=\"/profile\" element={<Profile />} />\r\n+        <Route path=\"/profile/*\" element={<Profile />} />\r\n         <Route path=\"/oauth-callback\" element={<OAuthCallback />} />\r\n       </Routes>\r\n     </BrowserRouter>\r\n   );\r\n"
+                    "date": 1753273867813,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -24,11 +24,11 @@\n         <Route path=\"/*\" element={<MainLayout />}>\r\n           <Route path=\"\" element={<GameList />} />\r\n           <Route element={<ProtectedRoute />}>\r\n             <Route path=\"profile/*\" element={<Profile />} />\r\n+            <Route path=\"get-coins\" element={<GetCoins />} />\r\n           </Route>\r\n          \r\n-          {/* Add more routes as needed */}\r\n         </Route>\r\n       </Routes>\r\n     </BrowserRouter>\r\n   );\r\n"
                 }
             ],
-            "date": 1752474442231,
+            "date": 1753268656245,
             "name": "Commit-0",
-            "content": "import { useState } from 'react'\nimport reactLogo from './assets/react.svg'\nimport viteLogo from '/vite.svg'\nimport './App.css'\n\nfunction App() {\n  const [count, setCount] = useState(0)\n\n  return (\n    <>\n      <\n    </>\n  )\n}\n\nexport default App\n"
+            "content": "import React from \"react\";\r\nimport { BrowserRouter, Routes, Route, Navigate, Outlet } from \"react-router-dom\";\r\nimport Login from \"./pages/Login\";\r\nimport SignUp from \"./pages/SignUp\";\r\nimport OAuthCallback from \"./pages/OAuthCallback\";\r\nimport MainLayout from \"./components/MainLayout\";\r\nimport GameList from \"./components/GameList\";\r\nimport Profile from \"./pages/Profile\";\r\nimport './App.css';\r\n\r\nfunction ProtectedRoute() {\r\n  const isLoggedIn = !!localStorage.getItem('authToken');\r\n  return isLoggedIn ? <Outlet /> : <Navigate to=\"/login\" replace />;\r\n}\r\n\r\nfunction App() {\r\n  return (\r\n    <BrowserRouter>\r\n      <Routes>\r\n        <Route path=\"/login\" element={<Login />} />\r\n        <Route path=\"/signup\" element={<SignUp />} />\r\n        <Route path=\"/oauth-callback\" element={<OAuthCallback />} />\r\n        <Route path=\"/*\" element={<MainLayout />}>\r\n          <Route path=\"\" element={<GameList />} />\r\n          <Route element={<ProtectedRoute />}>\r\n            <Route path=\"profile/*\" element={<Profile />} />\r\n          </Route>\r\n          {/* Add more routes as needed */}\r\n        </Route>\r\n      </Routes>\r\n    </BrowserRouter>\r\n  );\r\n}\r\n\r\nexport default App;\r\n"
         }
     ]
 }

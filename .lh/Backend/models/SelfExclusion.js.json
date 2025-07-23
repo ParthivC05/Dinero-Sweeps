@@ -1,0 +1,18 @@
+{
+    "sourceFile": "backend/models/SelfExclusion.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1753249733701,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1753249733701,
+            "name": "Commit-0",
+            "content": "import mongoose from 'mongoose';\r\n\r\nconst SelfExclusionSchema = new mongoose.Schema({\r\n  user: {\r\n    type: mongoose.Schema.Types.ObjectId,\r\n    ref: 'User',\r\n    required: true,\r\n  },\r\n  type: {\r\n    type: String,\r\n    required: true,\r\n  },\r\n  startDate: {\r\n    type: Date,\r\n    required: true,\r\n  },\r\n  endDate: {\r\n    type: Date,\r\n    required: true,\r\n  },\r\n  status: {\r\n    type: String,\r\n    default: 'active',\r\n  },\r\n}, { timestamps: true });\r\n\r\nexport default mongoose.model('SelfExclusion', SelfExclusionSchema); "
+        }
+    ]
+}

@@ -5,9 +5,13 @@ import { useNavigate } from "react-router-dom";
 
 const MyInfo = ({ user }) => {
   const navigate = useNavigate();
+  const avatarUrl = user.avatar
+    ? `${import.meta.env.VITE_API_BASE_URL.replace('/api/v1', '')}/${user.avatar.replace(/\\\\/g, '/').replace(/\\/g, '/')}`
+    : undefined;
   return (
-    <div className="flex flex-col items-center w-full min-h-screen bg-transparent pt-8 pb-16">
-      <div className="w-full max-w-2xl bg-gradient-to-br from-[#0a2a3a] to-[#0d1e2b] rounded-2xl p-6 shadow-xl relative mb-8">
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm"></div>
+      <div className="relative w-full max-w-2xl bg-gradient-to-br from-[#0a2a3a] to-[#0d1e2b] rounded-2xl p-6 shadow-xl z-10">
         <button
           className="absolute top-4 right-4 text-2xl text-red-400 hover:text-red-600"
           onClick={() => navigate("/")}
@@ -17,11 +21,13 @@ const MyInfo = ({ user }) => {
         <div className="flex items-center gap-6 mb-6">
           <div className="relative">
             <div className="rounded-full border-4 border-yellow-400" style={{ width: 80, height: 80, overflow: 'hidden' }}>
+              {console.log(user)}
               <Avatar
-                src={user.avatar}
+                src={avatarUrl}
                 name={user.firstName + ' ' + user.lastName}
                 size="80"
                 round={true}
+                crossOrigin="anonymous"
               />
             </div>
           </div>

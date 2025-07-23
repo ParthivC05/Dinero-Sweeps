@@ -136,9 +136,14 @@ const Sidebar = () => {
           </span>
         </div>
         <div className="flex gap-2">
-          <button className="flex-1 font-bold rounded-xl bg-[#C0013A] py-2 hover:bg-[#A8002F] transition-colors">
+          <NavLink
+            to="/get-coins"
+            className={({ isActive }) =>
+              `flex-1 font-bold rounded-xl bg-[#C0013A] py-2 hover:bg-[#A8002F] transition-colors text-center ${isActive ? 'ring-2 ring-yellow-400' : ''}`
+            }
+          >
             Get Coins
-          </button>
+          </NavLink>
           <button className="flex-1 font-bold rounded-xl bg-[#C0013A] py-2 hover:bg-[#A8002F] transition-colors">
             Redeem
           </button>
