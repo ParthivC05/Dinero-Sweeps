@@ -3,11 +3,15 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 0,
+            "activePatchIndex": 1,
             "patches": [
                 {
                     "date": 1753272988212,
                     "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1753349537609,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -117,9 +117,11 @@\n \r\n   const SidebarContent = () => (\r\n     <>\r\n       <div className=\"text-center pt-6\">\r\n-        <img src={logo} alt=\"Dinero Sweeps Logo\" className=\"w-44 mx-auto mb-6\" />\r\n+        <NavLink to=\"/\">\r\n+          <img src={logo} alt=\"Dinero Sweeps Logo\" className=\"w-44 mx-auto mb-6\" />\r\n+        </NavLink>\r\n       </div>\r\n       \r\n       <div\r\n         className=\"mb-6 mx-4 p-4 border-2 border-yellow-400 rounded-2xl bg-[#18111A]\"\r\n"
                 }
             ],
             "date": 1753272988212,

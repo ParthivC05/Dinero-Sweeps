@@ -1,6 +1,7 @@
 import React from "react";
 import logo from "../assets/logo.png";
 import { FaInstagram, FaTiktok, FaFacebook, FaTimes } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const Footer = () => (
   <footer className="w-full bg-gradient-to-b from-black to-[#3a0d2e] text-white pt-8 pb-4 px-4 flex flex-col items-center">
@@ -14,27 +15,27 @@ const Footer = () => (
         <div className="flex-1 min-w-[180px]">
           <div className="font-bold mb-2">My Account</div>
           <ul className="space-y-1">
-            <li><a href="#" className="underline hover:text-yellow-400">My Info</a></li>
-            <li><a href="#" className="underline hover:text-yellow-400">Settings</a></li>
-            <li><a href="#" className="underline hover:text-yellow-400">Faucet</a></li>
-            <li><a href="#" className="underline hover:text-yellow-400">Transactions</a></li>
+            <li><Link to="/profile/my-info" className="underline hover:text-yellow-400">My Info</Link></li>
+            <li><Link to="/profile/settings/verify-profile" className="underline hover:text-yellow-400">Settings</Link></li>
+            <li><Link to="/faucet" className="underline hover:text-yellow-400">Faucet</Link></li>
+            <li><Link to="/transactions" className="underline hover:text-yellow-400">Transactions</Link></li>
           </ul>
         </div>
         <div className="flex-1 min-w-[180px]">
           <div className="font-bold mb-2">Features</div>
           <ul className="space-y-1">
-            <li><a href="#" className="underline hover:text-yellow-400">Task List</a></li>
-            <li><a href="#" className="underline hover:text-yellow-400">Tickets</a></li>
+            <li><Link to="/task-list" className="underline hover:text-yellow-400">Task List</Link></li>
+            <li><Link to="/tickets" className="underline hover:text-yellow-400">Tickets</Link></li>
           </ul>
         </div>
         <div className="flex-1 min-w-[180px]">
           <div className="font-bold mb-2">Support</div>
           <ul className="space-y-1">
-            <li><a href="#" className="underline hover:text-yellow-400">FAQ</a></li>
-            <li><a href="#" className="underline hover:text-yellow-400">Bonus Terms</a></li>
-            <li><a href="#" className="underline hover:text-yellow-400">Privacy policy</a></li>
-            <li><a href="#" className="underline hover:text-yellow-400">General terms & conditions</a></li>
-            <li><a href="#" className="underline hover:text-yellow-400">Responsible gaming</a></li>
+            <li><Link to="/faq" className="underline hover:text-yellow-400">FAQ</Link></li>
+            <li><Link to="/bonus-terms" className="underline hover:text-yellow-400">Bonus Terms</Link></li>
+            <li><Link to="/privacy-policy" className="underline hover:text-yellow-400">Privacy policy</Link></li>
+            <li><Link to="/general-terms" className="underline hover:text-yellow-400">General terms & conditions</Link></li>
+            <li><Link to="/responsible-gaming" className="underline hover:text-yellow-400">Responsible gaming</Link></li>
           </ul>
         </div>
       </div>

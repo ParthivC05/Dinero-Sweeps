@@ -118,7 +118,9 @@ const Sidebar = () => {
   const SidebarContent = () => (
     <>
       <div className="text-center pt-6">
-        <img src={logo} alt="Dinero Sweeps Logo" className="w-44 mx-auto mb-6" />
+        <NavLink to="/">
+          <img src={logo} alt="Dinero Sweeps Logo" className="w-44 mx-auto mb-6" />
+        </NavLink>
       </div>
       
       <div

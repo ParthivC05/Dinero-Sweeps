@@ -1,0 +1,22 @@
+{
+    "sourceFile": "src/pages/BonusTerms.jsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1753349040258,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1753349107797,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,3 +1,17 @@\n import React from \"react\";\r\n-const BonusTerms = () => <div className=\"p-8 text-white\">Bonus Terms Page (Coming Soon)</div>;\r\n+\r\n+const BonusTerms = () => (\r\n+  <div className=\"max-w-2xl mx-auto p-8 text-white\">\r\n+    <h1 className=\"text-3xl font-bold mb-4\">Bonus Terms</h1>\r\n+    <p className=\"mb-2\">All bonuses are subject to our Sweepstakes Rules and Terms of Service. Please read the following carefully:</p>\r\n+    <ul className=\"list-disc pl-6 mb-4\">\r\n+      <li>Bonuses are for entertainment purposes only and have no cash value.</li>\r\n+      <li>Each user may redeem a bonus only once unless otherwise specified.</li>\r\n+      <li>Bonuses may be revoked in case of abuse or fraud.</li>\r\n+      <li>Expiration dates and additional requirements may apply to each bonus.</li>\r\n+    </ul>\r\n+    <p>Contact support for any questions regarding your bonus eligibility.</p>\r\n+  </div>\r\n+);\r\n+\r\n export default BonusTerms; \n\\ No newline at end of file\n"
+                }
+            ],
+            "date": 1753349040258,
+            "name": "Commit-0",
+            "content": "import React from \"react\";\r\nconst BonusTerms = () => <div className=\"p-8 text-white\">Bonus Terms Page (Coming Soon)</div>;\r\nexport default BonusTerms; "
+        }
+    ]
+}

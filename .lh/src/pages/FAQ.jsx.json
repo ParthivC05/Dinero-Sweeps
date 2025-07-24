@@ -1,0 +1,26 @@
+{
+    "sourceFile": "src/pages/FAQ.jsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1753349031845,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1753349066650,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,3 +1,1 @@\n-import React from \"react\";\r\n-const FAQ = () => <div className=\"p-8 text-white\">FAQ Page (Coming Soon)</div>;\r\n-export default FAQ; \n\\ No newline at end of file\n+ \n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1753349083981,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,1 +1,21 @@\n- \n\\ No newline at end of file\n+import React from \"react\";\r\n+\r\n+const FAQ = () => (\r\n+  <div className=\"max-w-2xl mx-auto p-8 text-white\">\r\n+    <h1 className=\"text-3xl font-bold mb-4\">Frequently Asked Questions</h1>\r\n+    <div className=\"mb-4\">\r\n+      <h2 className=\"text-xl font-semibold\">Is Orion Star free to play?</h2>\r\n+      <p>Yes! Orion Star is always free to enter or win our Sweepstakes games. No purchase necessary.</p>\r\n+    </div>\r\n+    <div className=\"mb-4\">\r\n+      <h2 className=\"text-xl font-semibold\">How do I get coins?</h2>\r\n+      <p>You can get coins through daily bonuses, faucet, or by participating in promotions.</p>\r\n+    </div>\r\n+    <div className=\"mb-4\">\r\n+      <h2 className=\"text-xl font-semibold\">How do I contact support?</h2>\r\n+      <p>Email us at <a href=\"mailto:Support@orionstarsweeps.com\" className=\"underline text-yellow-400\">Support@orionstarsweeps.com</a> for assistance 24/7.</p>\r\n+    </div>\r\n+  </div>\r\n+);\r\n+\r\n+export default FAQ; \n\\ No newline at end of file\n"
+                }
+            ],
+            "date": 1753349031845,
+            "name": "Commit-0",
+            "content": "import React from \"react\";\r\nconst FAQ = () => <div className=\"p-8 text-white\">FAQ Page (Coming Soon)</div>;\r\nexport default FAQ; "
+        }
+    ]
+}

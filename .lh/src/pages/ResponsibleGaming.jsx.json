@@ -1,0 +1,18 @@
+{
+    "sourceFile": "src/pages/ResponsibleGaming.jsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1753349130247,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1753349130247,
+            "name": "Commit-0",
+            "content": "import React from \"react\";\r\n\r\nconst ResponsibleGaming = () => (\r\n  <div className=\"max-w-2xl mx-auto p-8 text-white\">\r\n    <h1 className=\"text-3xl font-bold mb-4\">Responsible Gaming</h1>\r\n    <p className=\"mb-2\">We are committed to promoting responsible gaming and providing a safe environment for all players.</p>\r\n    <ul className=\"list-disc pl-6 mb-4\">\r\n      <li>Set limits on your play time and spending.</li>\r\n      <li>Take breaks and play for fun, not profit.</li>\r\n      <li>If you need help, contact our support team or seek professional assistance.</li>\r\n      <li>Self-exclusion options are available in your profile settings.</li>\r\n    </ul>\r\n    <p>For more information, visit our <a href=\"/profile/settings/self-exclusion\" className=\"underline text-yellow-400\">Self Exclusion</a> page.</p>\r\n  </div>\r\n);\r\n\r\nexport default ResponsibleGaming; "
+        }
+    ]
+}

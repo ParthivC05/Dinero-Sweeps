@@ -1,0 +1,18 @@
+{
+    "sourceFile": "src/pages/Tickets.jsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1753349171574,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1753349171574,
+            "name": "Commit-0",
+            "content": "import React from \"react\";\r\n\r\nconst Tickets = () => (\r\n  <div className=\"max-w-2xl mx-auto p-8 text-white\">\r\n    <h1 className=\"text-3xl font-bold mb-4\">Tickets</h1>\r\n    <p className=\"mb-2\">Submit a support ticket or view your existing tickets below.</p>\r\n    <ul className=\"list-disc pl-6 mb-4\">\r\n      <li>Ticket #12345 - Pending - \"Unable to claim bonus\"</li>\r\n      <li>Ticket #12344 - Resolved - \"Login issue\"</li>\r\n    </ul>\r\n    <button className=\"bg-yellow-400 text-black font-bold px-6 py-2 rounded-full shadow hover:bg-yellow-500 transition-colors mt-4\">Submit New Ticket</button>\r\n  </div>\r\n);\r\n\r\nexport default Tickets; "
+        }
+    ]
+}

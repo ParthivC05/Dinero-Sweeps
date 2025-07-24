@@ -1,0 +1,22 @@
+{
+    "sourceFile": "src/pages/PrivacyPolicy.jsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1753349046255,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1753349114104,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,3 +1,17 @@\n import React from \"react\";\r\n-const PrivacyPolicy = () => <div className=\"p-8 text-white\">Privacy Policy Page (Coming Soon)</div>;\r\n+\r\n+const PrivacyPolicy = () => (\r\n+  <div className=\"max-w-2xl mx-auto p-8 text-white\">\r\n+    <h1 className=\"text-3xl font-bold mb-4\">Privacy Policy</h1>\r\n+    <p className=\"mb-2\">We value your privacy and are committed to protecting your personal information.</p>\r\n+    <ul className=\"list-disc pl-6 mb-4\">\r\n+      <li>We do not sell or share your data with third parties.</li>\r\n+      <li>Your information is used only to provide and improve our services.</li>\r\n+      <li>All data is stored securely and access is restricted.</li>\r\n+      <li>You may request deletion of your account and data at any time.</li>\r\n+    </ul>\r\n+    <p>For more details, contact <a href=\"mailto:Support@orionstarsweeps.com\" className=\"underline text-yellow-400\">Support@orionstarsweeps.com</a>.</p>\r\n+  </div>\r\n+);\r\n+\r\n export default PrivacyPolicy; \n\\ No newline at end of file\n"
+                }
+            ],
+            "date": 1753349046255,
+            "name": "Commit-0",
+            "content": "import React from \"react\";\r\nconst PrivacyPolicy = () => <div className=\"p-8 text-white\">Privacy Policy Page (Coming Soon)</div>;\r\nexport default PrivacyPolicy; "
+        }
+    ]
+}

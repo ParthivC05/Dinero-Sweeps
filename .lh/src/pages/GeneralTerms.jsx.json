@@ -1,0 +1,18 @@
+{
+    "sourceFile": "src/pages/GeneralTerms.jsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1753349121678,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1753349121678,
+            "name": "Commit-0",
+            "content": "import React from \"react\";\r\n\r\nconst GeneralTerms = () => (\r\n  <div className=\"max-w-2xl mx-auto p-8 text-white\">\r\n    <h1 className=\"text-3xl font-bold mb-4\">General Terms & Conditions</h1>\r\n    <ul className=\"list-disc pl-6 mb-4\">\r\n      <li>Use of this platform is subject to all applicable laws and regulations.</li>\r\n      <li>Accounts are for individual use only and may not be shared.</li>\r\n      <li>Any attempt to manipulate or abuse the system will result in account suspension.</li>\r\n      <li>We reserve the right to update these terms at any time.</li>\r\n    </ul>\r\n    <p>By using Orion Star, you agree to these terms and conditions.</p>\r\n  </div>\r\n);\r\n\r\nexport default GeneralTerms; "
+        }
+    ]
+}
